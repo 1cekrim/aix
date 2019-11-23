@@ -1,3 +1,3 @@
-docker stop assignment
-docker rm assignment
+docker stop aix
+docker rm aix
 bash start.sh
