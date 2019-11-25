@@ -10,7 +10,7 @@ comments: true
 | <center>이름</center> | <center> 학과 </center> | <center>학번</center> | <center>이메일</center> |
 | 김우찬 | 컴퓨터소프트웨어학부 | 2019031685 | lion0303@hanyang.ac.kr |
 | 김현수 | 컴퓨터소프트웨어학부 | 2019027192 | 1cekrim.dev@gmail.com |
-| 이경민 | 기계공학부           | 2019015196 | ? |
+| 이경민 | 기계공학부           | 2019015196 | kminsmin@gmail.com |
 | 조영환 | 원자력공학과         | 2014058386 | jyh4997@naver.com |
 | 최민기 | 자연환경공학과       | 2017080746 | tjsrhr136@naver.com |
 
