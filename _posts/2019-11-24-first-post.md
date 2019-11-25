@@ -11,8 +11,8 @@ comments: true
 | 김우찬 | 컴퓨터소프트웨어학부 | 2019031685 | ? |
 | 김현수 | 컴퓨터소프트웨어학부 | 2019027192 | 1cekrim.dev@gmail.com |
 | 이경민 | 기계공학부           | 2019015196 | ? |
-| 조영환 | 원자력공학과         | 2014058386 | ? |
-| 최민기 | 자연환경공학과       | 2017080746 | ? |
+| 조영환 | 원자력공학과         | 2014058386 | jyh4997@naver.com |
+| 최민기 | 자연환경공학과       | 2017080746 | tjsrhr136@naver.com |
 
 ![crimes-in-boston-image](https://storage.googleapis.com/kaggle-datasets-images/49781/90388/0e523321547c24d989c910879491fce7/dataset-cover.JPG?t=2018-09-04-17-52-47)
 
