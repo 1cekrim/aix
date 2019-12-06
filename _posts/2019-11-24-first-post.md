@@ -38,7 +38,28 @@ comments: true
 
 2015년부터 2018년까지 보스턴에서 발생한 범죄를 통계낸 자료입니다.<br>
 이 자료가 제공하는 csv 파일은 다음과 같습니다.<br>
- - 범죄가 일어난 시간, 요일, 범죄 코드 등이 나와있는 csv 파일
- - 범죄 코드와 범죄 이름이 연결되어 있는 csv 파일
+
+| <center>파일 이름</center> | <center>설명</center> |
+| crime.csv | 범죄가 일어난 시간, 요일, 범죄 코드 등이 나와있는 csv 파일 |
+| offense_codes.csv | 범죄 코드와 범죄 이름이 연결되어 있는 csv 파일 |
+
+offense_codes.csv를 보면, 범죄 코드 하나에 범죄 이름이 여러개가 연결되어 있는 등 문제가 좀 있습니다.<br>
+그래서 보기좋게 전처리를 해주겠습니다.
+
+```python
+import pandas as pd
+import re
+import csv
+# offense_codes.csv에 인코딩이 잘못된 문자가 있기 때문에, engine을 c에서 python으로 바꿔줘야 합니다.
+df = pd.read_csv('offense_codes.csv', engine='python')
+# CODE값을 기준으로 오름차순으로 정렬해줍니다.
+df = df.sort_values(['CODE'])
+# NAME 값에서 필요없는 문자들을 지워줍니다.
+df['NAME'] = df['NAME'].map(lambda x: re.sub("[^a-zA-Z0-9-()$&.,/]", " ", x))
+# 중복된 값들을 지줘줍니다.
+df = df.drop_duplicates(subset='CODE', keep='first')
+# fixed_offense_codes.csv에 결과물을 적어줍니다.
+df.to_csv('fixed_offense_codes.csv', index=False)
+```
 
 작성중입니다...
