@@ -68,4 +68,7 @@ df.to_csv('fixed_offense_codes.csv', index=False)
 ## IV. Evaluation & Analysis
 
 
+## V. Related Work
+[Crime Type Classification using Neural Networks: A brief walkthrough](https://medium.com/@nicksypark/crime-type-classification-using-neural-networks-a-brief-walkthrough-841b273f9afe)(blog)
+
 작성중입니다...
