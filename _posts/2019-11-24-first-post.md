@@ -43,7 +43,7 @@ comments: true
 | crime.csv | 범죄가 일어난 시간, 요일, 범죄 코드 등이 나와있는 csv 파일 |
 | offense_codes.csv | 범죄 코드와 범죄 이름이 연결되어 있는 csv 파일 |
 
-offense_codes.csv를 보면, 범죄 코드 하나에 범죄 이름이 여러개가 연결되어 있는 등 문제가 좀 있습니다.<br>
+offense_codes.csv를 보면, 범죄 코드 하나에 범죄 이름이 여러 개가 연결되어 있는 등 문제가 좀 있습니다.<br>
 그래서 보기좋게 전처리를 해주겠습니다.
 
 ```python
@@ -61,5 +61,11 @@ df = df.drop_duplicates(subset='CODE', keep='first')
 # fixed_offense_codes.csv에 결과물을 적어줍니다.
 df.to_csv('fixed_offense_codes.csv', index=False)
 ```
+
+## III. Methodology
+
+
+## IV. Evaluation & Analysis
+
 
 작성중입니다...
