@@ -85,8 +85,13 @@ df.to_csv('fixed_offense_codes.csv', index=False)
 
 ## III. Methodology
 
+- K-means Clustering
+- Naive Bayes
+- ANN
 
 ## IV. Evaluation & Analysis
+
+1. K-means Clustering을 이용한 범죄 발생 위치 분석
 
 
 ## V. Related Work
