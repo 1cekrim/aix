@@ -43,6 +43,27 @@ comments: true
 | crime.csv | 범죄가 일어난 시간, 요일, 범죄 코드 등이 나와있는 csv 파일 |
 | offense_codes.csv | 범죄 코드와 범죄 이름이 연결되어 있는 csv 파일 |
 
+crime.csv의 각 열은 다음과 같은 의미입니다.
+
+| <center>열 이름</center> | <center>설명</center> |
+| INCIDENT_NUMBER | 사건 번호. 모든 범죄는 각자 고유한 사건 번호를 하나씩 가집니다. |
+| OFFENSE_CODE | 어떤 범죄를 저질렀는 지 알려주는 코드입니다. offense_codes.csv에서 찾을 수 있습니다. |
+| OFFENSE_CODE_GROUP | 저지른 범죄가 어떤 종류에 속하는지 알려줍니다. |
+| OFFENSE_DESCRIPTION | 범죄 묘사입니다. |
+| DISTRICT | 어느 지구에서 범죄가 발생했는지 알려줍니다. |
+| REPORTING_AREA | 어디서 보고되었는지 알려줍니다. |
+| SHOOTING | 총격이 있었는지 알려줍니다. }
+| OCCURRED_ON_DATE | 범죄 발생 날짜를 알려줍니다. |
+| YEAR | 범죄가 발생한 년도입니다. |
+| MONTH | 범죄가 발생한 달입니다. |
+| DAY_OF_WEEK | 범죄가 발생한 요일입니다. }
+| HOUR | 범죄가 발생한 시간입니다. |
+| UCR_PART | 범죄 보고서의 어느 부분에 작성되어 있는지 알려줍니다. |
+| STREET | 범죄가 발생한 도로입니다. |
+| Lat | 범죄가 발생한 위치의 위도입니다. }
+| Long | 범죄가 발생한 위치의 경도입니다. |
+| Location | 범죄가 발생한 위칩입니다. |
+
 offense_codes.csv를 보면, 범죄 코드 하나에 범죄 이름이 여러 개가 연결되어 있는 등 문제가 좀 있습니다.<br>
 그래서 보기좋게 전처리를 해주겠습니다.
 
