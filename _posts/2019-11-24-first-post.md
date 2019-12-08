@@ -665,7 +665,7 @@ test_set_df.to_csv('test_set.csv', index=False)
 | ABOUT_AUTO | 참/거짓 |
 | EXIST_SINNER | 참/거짓 |
 
-이 데이터들을 신경망에 넣어주기 위해서는 하나의 벡터로 표현할 필요가 있습니다.  
+이 데이터들을 신경망에 넣어주기 위해서는 데이터 하나를 하나의 벡터로 표현해야 합니다.
 예를 들어, ```TIME``` 열은 다음과 같은 방법으로 하나의 벡터로 표현할 수 있습니다.  
 
 | 데이터 | TIME_Morning | TIME_Afternoon | TIME_Evening | TIME_Night |
