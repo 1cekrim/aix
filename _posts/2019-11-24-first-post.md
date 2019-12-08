@@ -322,7 +322,6 @@ plt.show()
 
 ### 데이터셋 샘플링
 
-
 ![Last Offense Code Group](/aix/img/last_offense_code_group.png)
 
 위 그래프를 보면, Theft가 Other보다 2배 정도 많습니다.  
@@ -361,12 +360,86 @@ plt.show()
 
 ![Undersampling Result](/aix/img/undersampling_result.png)
 
+### 데이터 추가
 
-(대충 과적합을 방지하기 위해 under sampling을 한다는 내용)
+이대로 바로 학습을 진행하는 것도 좋겠지만, 데이터를 조금 더 추가해줍시다.  
+범죄가 발생한 시간대가 Morning, Afternoon, Evening, Night 중 어디에 속하는지, 범죄가 발생한 날이 weekday인지 아닌지를 추가해주겠습니다.  
+
+```python
+import pandas as pd
+
+df = pd.read_csv('fixed_crime5.csv', engine='python')
+
+def func_time(x):
+    if 6 <= x and x < 12:
+        return 'Morning'
+    if 12 <= x and x < 17:
+        return 'Afternoon'
+    if 5 <= x and x < 19:
+        return 'Evening'
+    return 'Night'
+
+df['TIME'] = df.apply(lambda x: func_time(x['HOUR']), axis=1)
+
+def func_weekday(x):
+    if x == 'Sunday' or x == 'Saturday':
+        return 1
+    else:
+        return 0
+
+df['WEEKDAY'] = df.apply(lambda x: func_weekday(x['DAY_OF_WEEK']), axis=1)
+
+df.to_csv('fixed_crime6.csv', index=False)
+```
 
 ### 샘플 분할
 
-(대충 6 : 2 : 2 비율로 training set, validation set, test set을 나눈다는 내용)
+fixed_crim6.csv의 내용을 8 : 1 : 1의 비율로 training set, validation set, test set으로 나눠주겠습니다.
+
+```python
+import pandas as pd
+
+df = pd.read_csv('fixed_crime6.csv', engine='python')
+
+classes = ['Accident', 'Other', 'Misdemeanor', 'Violence', 'Service', 'Theft']
+
+dfs = {}
+for c in classes:
+    dfs[c] = df[df['CLASSIFICATION'] == c]
+
+training_set = []
+validation_set = []
+test_set = []
+
+for c in classes:
+    train = dfs[c].sample(frac=0.8)
+    dfs[c] = dfs[c].drop(train.index)
+
+    validation = dfs[c].sample(frac=0.5)
+    dfs[c] = dfs[c].drop(validation.index)
+
+    training_set.append(train)
+    validation_set.append(validation)
+    test_set.append(dfs[c])
+
+training_set_df = training_set[0]
+validation_set_df = validation_set[0]
+test_set_df = test_set[0]
+
+for i in range(1, len(training_set)):
+    training_set_df = training_set_df.append(training_set[i])
+    validation_set_df = validation_set_df.append(validation_set[i])
+    test_set_df = test_set_df.append(test_set[i])
+
+training_set_df = training_set_df.sample(frac=1).reset_index(drop=True)
+validation_set_df = validation_set_df.sample(frac=1).reset_index(drop=True)
+test_set_df = test_set_df.sample(frac=1).reset_index(drop=True)
+
+training_set_df.to_csv('training_set.csv', index=False)
+validation_set_df.to_csv('validation_set.csv', index=False)
+test_set_df.to_csv('test_set.csv', index=False)
+```
+
 
 ---
 
