@@ -576,17 +576,33 @@ df.to_csv('fixed_crime6.csv', index=False)
 
 ### 샘플 분할
 
-fixed_crim6.csv의 내용을 8 : 1 : 1의 비율로 training set, validation set, test set으로 나눠주겠습니다.
+![Dataset Decomposition](https://t1.daumcdn.net/cfile/tistory/9951E5445AAE1BE025)  
+[출처](https://3months.tistory.com/118)  
+
+```fixed_crim6.csv```의 내용을 8 : 1 : 1의 비율로 ```training set, validation set, test set```으로 나눠주겠습니다.  
+```training set```은 신경망을 학습시키는 위해 필요한 데이터셋입니다.  
+```test set```은 신경망의 학습이 끝난 후, 신경망을 평가하기 위해 필요한 데이터셋입니다.  
+```validation set```은 학습 도중에 신경망을 평가하기 위해 필요한 데이터셋입니다.  
+신경망을 학습시킬 때, 학습의 기준이 되는 것은 ```training set``` 입니다.  
+하지만 저희가 신경망을 학습시키는 이유는 ```training set```을 예측하기 위함이 아니라, 학습에 사용되지 않은 ```test set```을 예측하기 위함입니다.  
+그렇다고 학습 도중에 ```test set```으로 신경망을 평가할 수는 없으니, ```training set```과 ```test set``` 모두에 포함되지 않는 새로운 데이터셋이 필요한데 이를 ```validation set```이라고 합니다.
 
 ```python
 import pandas as pd
 
 df = pd.read_csv('fixed_crime6.csv', engine='python')
 
+# CLASSIFICATION의 독립된 요소 목록입니다
 classes = ['Accident', 'Other', 'Misdemeanor', 'Violence', 'Service', 'Theft']
 
+# dfs는 dictionary 입니다.
+# dictionary는 key와 value가 서로 대응된 상태로 저장되는 자료형입니다
+# 예를 들어, dfs['INSIDE'] = df[df['CLASSIFICATION'] == 'INSIDE']
+# 이렇게 넣어 놓으면, 다음부터는 dfs['INSIDE'].sample()
+# 이런 식으로 df[df['CLASSIFICATION'] == 'INSIDE'].sample() 대신 사용할 수 있습니다.
 dfs = {}
 for c in classes:
+    # CLASSIFICATION이 c와 같은 행들을 모아 새로운 dataframe을 만들고, dfs[c]에 넣어줍니다.
     dfs[c] = df[df['CLASSIFICATION'] == c]
 
 training_set = []
@@ -594,16 +610,21 @@ validation_set = []
 test_set = []
 
 for c in classes:
+    # dfs[c]에서 80%를 무작위로 샘플링 해 train에 넣고, 샘플을 dfs[c]에서 지워줍니다.
     train = dfs[c].sample(frac=0.8)
     dfs[c] = dfs[c].drop(train.index)
 
+    # 80%를 지웠기 때문에, 남은 것의 50%는 전체의 10% 입니다.
+    # dfs[c]에서 10%를 무작위로 샘플링 해 validation에 넣고, 샘플을 dfs[c]에서 지워줍니다.
     validation = dfs[c].sample(frac=0.5)
     dfs[c] = dfs[c].drop(validation.index)
 
+    # train과 validation을 넣어주고, 나머지 10%를 test_set에 넣어줍니다.
     training_set.append(train)
     validation_set.append(validation)
     test_set.append(dfs[c])
 
+# training_set, validation_set, test_set dataframe들을 모두 하나로 합쳐줍니다
 training_set_df = training_set[0]
 validation_set_df = validation_set[0]
 test_set_df = test_set[0]
@@ -613,16 +634,20 @@ for i in range(1, len(training_set)):
     validation_set_df = validation_set_df.append(validation_set[i])
     test_set_df = test_set_df.append(test_set[i])
 
+# 각 dataframe의 row들을 무작위로 섞어줍니다.
 training_set_df = training_set_df.sample(frac=1).reset_index(drop=True)
 validation_set_df = validation_set_df.sample(frac=1).reset_index(drop=True)
 test_set_df = test_set_df.sample(frac=1).reset_index(drop=True)
 
+# dataframe을 csv 파일로 저장합니다.
 training_set_df.to_csv('training_set.csv', index=False)
 validation_set_df.to_csv('validation_set.csv', index=False)
 test_set_df.to_csv('test_set.csv', index=False)
 ```
 
 ### one-hot encoding
+
+
 
 ```python
 import pandas as pd
@@ -632,10 +657,8 @@ training_set_df = pd.read_csv('training_set.csv', engine='python')
 validation_set_df = pd.read_csv('validation_set.csv', engine='python')
 
 test_set_df = pd.get_dummies(test_set_df, columns=test_set_df.columns)
-training_set_df = pd.get_dummies(
-    training_set_df, columns=training_set_df.columns)
-validation_set_df = pd.get_dummies(
-    validation_set_df, columns=validation_set_df.columns)
+training_set_df = pd.get_dummies(training_set_df, columns=training_set_df.columns)
+validation_set_df = pd.get_dummies(validation_set_df, columns=validation_set_df.columns)
 
 test_set_df.to_csv('test_set_one_hot.csv', index=False)
 training_set_df.to_csv('training_set_one_hot.csv', index=False)
