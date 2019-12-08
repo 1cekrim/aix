@@ -13,7 +13,9 @@ description: 한양대학교 2019년 2학기 AI+X:Deep Learning
 # url is the the website domain URL without a trailing slash
 #url: "https://example.com"
 
-url: "https://1cekrim.github.io/aix"
+url: "https://1cekrim.github.io/"
+
+baseurl: "/aix"
 
 # baseurl should be an empty string
 #baseurl: ""
