@@ -212,7 +212,7 @@ Burglary - No Property Taken
 
 
 범죄의 종류가 무려 67개나 됩니다.<br>
-일단은 발생한 횟수가 천번 이하인 범죄들을 모두 지워주는 게 좋을 것 같습니다.<br>
+일단은 발생한 횟수가 천번 이하인 범죄들을 모두 OTHER에 통합해 주는 게 좋을 것 같습니다.<br>
 
 ```python
 import pandas as pd
@@ -222,13 +222,19 @@ df = pd.read_csv('fixed_crime2.csv', engine='python')
 value_counts = df['OFFENSE_CODE_GROUP'].value_counts(sort=True, dropna=False).tolist()
 value_counts_index = df['OFFENSE_CODE_GROUP'].value_counts(sort=True, dropna=False).index.tolist()
 
-drop_list = []
+other_list = []
 
 for i in range(len(value_counts)):
     if value_counts[i] <= 1000:
-        drop_list.append(value_counts_index[i])
+        other_list.append(value_counts_index[i])
 
-df = df[~df['OFFENSE_CODE_GROUP'].isin(drop_list)]
+def func(x):
+    if x in other_list:
+        return 'Other'
+    else:
+        return x
+
+df['OFFENSE_CODE_GROUP'] = df.apply(lambda x: func(x['OFFENSE_CODE_GROUP']), axis=1)
 
 df.to_csv('fixed_crime3.csv', index=False)
 
@@ -238,49 +244,126 @@ plt.show()
 
 ![Fixed Offense Code Group](/img/fixed_offense_code_group.png)
 
-36개로 줄이는 데 성공했습니다! 이제 비슷한 범죄끼리 묶어 범죄의 종류를 5~10개 정도로 줄이는 것이 좋겠습니다.<br> 
+36개로 줄이는 데 성공했습니다! 이제 비슷한 범죄끼리 묶어 범죄의 종류를 5개 정도로 줄이는 것이 좋겠습니다.<br> 
 
 | OFFENSE_CODE_GROUP | 설명 | 분류 |
-| Motor Vehicle Accident Response | 교통사고 |
-| Larceny | 절도 |
-| Medical Assistance | 자살, 맹견에 물림과 같은 의료 관련 지원 |
-| Investigate Person | 사람 조사 |
-| Other | 기타 |
-| Drug Violation | 약물 |
-| Simple Assault | 단순 폭행 |
-| Vandalism | 기물파손 |
-| Verbal Disputes | 말싸움 |
-| Towed | 견인 |
-| Investigate Property | 재산 조사 |
-| Larceny From Motor Vehicle | 차량 관련 절도 |
-| Property Lost | 분실물 |
-| Warrant Arrests | 체포 |
-| Aggravated Assault | 가중 폭행 |
-| Violations | 무단횡단이나 노점상과 같은 법 위반 |
-| Fraud | 사기 |
-| Residential Burglary | 강도 |
-| Missing Person Located | 실종자 발견 |
-| Auto Theft | 차량 절도 |
-| Robbery | 절도 |
-| Harassment | 괴롭힘 |
-| Property Found | 부동산 발견(소유자가 없는 부동산 발견)
-| Missing Person Reported | 실종자 신고 |
-| Confidence Games | 도박 사기 |
-| Police Service Incidents | 경찰 서비스 사고 |
-| Disorderly Conduct | 무질서한 행동 |
-| Fire Related Reports | 화재 관련 |
-| Firearm Violations | 총기 위반 |
-| License Violation | 저작권 위반 |
-| Restraining Order Violations | 접근금지명령 위반 |
-| Counterfeiting | 위조 |
-| Recovered Stolen Property | 도난 재산 회수 |
-| Commercial Burglary | 상점 강도 |
-| Auto Theft Recovery | 도난 차량 회수 |
-| Liquor Violation | 주류법 위반 |
+| Motor Vehicle Accident Response | 교통사고 | 사고 |
+| Larceny | 절도 | 절도 |
+| Medical Assistance | 자살, 맹견에 물림과 같은 사고 처리 | 사고 |
+| Investigate Person | 사람 조사 | 서비스 |
+| Other | 기타 | 기타 |
+| Drug Violation | 약물 | 경범죄 |
+| Simple Assault | 단순 폭행 | 폭행 |
+| Vandalism | 기물파손 | 경범죄 |
+| Verbal Disputes | 말싸움 | 폭행 |
+| Towed | 견인 | 경범죄 |
+| Investigate Property | 재산 조사 | 서비스 |
+| Larceny From Motor Vehicle | 차량 관련 절도 | 절도 |
+| Property Lost | 분실물 | 절도 |
+| Warrant Arrests | 체포 | 서비스 |
+| Aggravated Assault | 가중 폭행 | 폭행 |
+| Violations | 무단횡단이나 노점상과 같은 법 위반 | 경범죄 |
+| Fraud | 사기 | 절도 |
+| Residential Burglary | 강도 | 절도 |
+| Missing Person Located | 실종자 발견 | 서비스 |
+| Auto Theft | 차량 절도 | 절도 |
+| Robbery | 강도 | 절도 |
+| Harassment | 괴롭힘 | 폭행 |
+| Property Found | 부동산 발견(소유자가 없는 부동산 발견) | 서비스 |
+| Missing Person Reported | 실종자 신고 | 서비스 |
+| Confidence Games | 도박 사기 | 절도 |
+| Police Service Incidents | 경찰 서비스 사고 | 사고 |
+| Disorderly Conduct | 무질서한 행동 | 경범죄 |
+| Fire Related Reports | 화재 관련 | 사고 |
+| Firearm Violations | 총기 위반 | 경범죄 |
+| License Violation | 저작권 위반 | 경범죄 |
+| Restraining Order Violations | 접근금지명령 위반 | 경범죄 |
+| Counterfeiting | 위조 | 경범죄 |
+| Recovered Stolen Property | 도난 재산 회수 | 서비스 |
+| Commercial Burglary | 상점 강도 | 절도 |
+| Auto Theft Recovery | 도난 차량 회수 | 절도 |
+| Liquor Violation | 주류법 위반 | 경범죄 |
 
-(분류하고 나니 그래프가 깔끔해졌다는 내용)
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+accident_list = ['Medical Assistance', 'Motor Vehicle Accident Response', 'Fire Related Reports', 'Police Service Incidents']
+theft_list = ['Larceny', 'Larceny From Motor Vehicle', 'Property Lost', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Fraud', 'Confidence Games', 'Commercial Burglary', 'Auto Theft Recovery']
+misdemeanor_list = ['Drug Violation', 'Liquor Violation', 'Vandalism', 'Towed', 'Violations', 'Disorderly Conduct', 'Firearm Violations', 'License Violation', 'Restraining Order Violations', 'Counterfeiting']
+service_list = ['Investigate Person', 'Investigate Property', 'Warrant Arrests', 'Missing Person Located', 'Property Found', 'Missing Person Reported', 'Recovered Stolen Property']
+violence_list = ['Verbal Disputes', 'Simple Assault', 'Aggravated Assault', 'Harassment']
+other_list = ['Other']
+
+df = pd.read_csv('fixed_crime3.csv', engine='python')
+
+def func(x):
+    if x in accident_list:
+        return 'Accident'
+    if x in theft_list:
+        return 'Theft'
+    if x in misdemeanor_list:
+        return 'Misdemeanor'
+    if x in service_list:
+        return 'Service'
+    if x in violence_list:
+        return 'Violence'
+    if x in other_list:
+        return 'Other'
+
+df['CLASSIFICATION'] = df.apply(lambda x: func(x['OFFENSE_CODE_GROUP']), axis=1)
+
+df.to_csv('fixed_crime4.csv', index=False)
+
+df['CLASSIFICATION'].value_counts(sort=True, dropna=False).plot(kind='barh')
+plt.show()
+```
+
+![Last Offense Code Group](/img/last_offense_code_group.png)
+
+6개로 줄이는 데 성공했습니다! 데이터의 불균형이 많이 해결된 것이 보입니다.  
 
 ## 데이터셋 샘플링
+
+
+![Last Offense Code Group](/img/last_offense_code_group.png)
+
+위 그래프를 보면, Theft가 Other보다 2배 정도 많습니다.  
+이렇게 데이터 불균형(imbalanced data)가 있으면, 학습이 제대로 안 됩니다.  
+예를 들어, 데이터 10만개 중 9만개가 a클래스이고, 1만개가 b클래스라면 항상 a클래스라고 데이터를 분류하는 모델의 정확도가 90%가 되어 버립니다.  
+그래서 보통 머신 러닝 알고리즘들은 데이터셋에서 각 클래스의 개수가 동일할 때 좋은 성능을 보여줍니다.  
+
+이 문제를 해결하기 위해, Random undersampling이라는 기법을 사용할 것입니다.  
+Random undersampling은 간단합니다. 그냥 가장 적은 개수의 클래스(저희의 경우 Other)의 개수가 되도록 다른 클래스들의 데이터들을 무작위로 지워 주면 됩니다.  
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+df = pd.read_csv('fixed_crime4.csv', engine='python')
+
+drop_list = ['Accident', 'Theft', 'Misdemeanor', 'Service', 'Violence']
+
+new_df = df[df['CLASSIFICATION'] == 'Other']
+other_count = len(df[df['CLASSIFICATION'] == 'Other'])
+
+for class_name in drop_list:
+    class_index = df[df['CLASSIFICATION'] == class_name].index
+    under_sample_index = np.random.choice(class_index, other_count, replace=False)
+    under_sample = df.loc[under_sample_index]
+    new_df = new_df.append(under_sample)
+
+new_df = new_df.sample(frac=1).reset_index(drop=True)
+
+new_df.to_csv('fixed_crime5.csv', index=False)
+
+new_df['CLASSIFICATION'].value_counts(sort=True, dropna=False).plot(kind='barh')
+plt.show()
+```
+
+![Undersampling Result](/img/undersampling_result.png)
+
 
 (대충 과적합을 방지하기 위해 under sampling을 한다는 내용)
 
