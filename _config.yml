@@ -16,6 +16,8 @@ description: 한양대학교 2019년 2학기 AI+X:Deep Learning
 # baseurl should be an empty string
 #baseurl: ""
 
+baseurl: "/aix"
+
 # --- Navigation bar options --- #
 
 # List of links in the navigation bar

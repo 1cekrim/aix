@@ -123,7 +123,7 @@ df['OFFENSE_CODE_GROUP'].value_counts(sort=True, dropna=False).plot(kind='barh')
 plt.show()
 ```
 
-![Old Offense Code Group Plot](/img/old_offense_code_group.png)
+![Old Offense Code Group Plot](/aix/img/old_offense_code_group.png)
 
 흠... 뭔가 많습니다. 이대로 바로 사용하는 것은 무리일 것 같습니다.  
 
@@ -239,7 +239,7 @@ df['OFFENSE_CODE_GROUP'].value_counts(sort=True, dropna=False).plot(kind='barh')
 plt.show()
 ```
 
-![Fixed Offense Code Group](/img/fixed_offense_code_group.png)
+![Fixed Offense Code Group](/aix/img/fixed_offense_code_group.png)
 
 36개로 줄이는 데 성공했습니다! 이제 비슷한 범죄끼리 묶어 범죄의 종류를 5~10개 정도로 줄이는 것이 좋겠습니다.   
 
@@ -316,14 +316,14 @@ df['CLASSIFICATION'].value_counts(sort=True, dropna=False).plot(kind='barh')
 plt.show()
 ```
 
-![Last Offense Code Group](/img/last_offense_code_group.png)
+![Last Offense Code Group](/aix/img/last_offense_code_group.png)
 
 6개로 줄이는 데 성공했습니다! 데이터의 불균형이 많이 해결된 것이 보입니다.  
 
 ### 데이터셋 샘플링
 
 
-![Last Offense Code Group](/img/last_offense_code_group.png)
+![Last Offense Code Group](/aix/img/last_offense_code_group.png)
 
 위 그래프를 보면, Theft가 Other보다 2배 정도 많습니다.  
 이렇게 데이터 불균형(imbalanced data)가 있으면, 학습이 제대로 안 됩니다.  
@@ -359,7 +359,7 @@ new_df['CLASSIFICATION'].value_counts(sort=True, dropna=False).plot(kind='barh')
 plt.show()
 ```
 
-![Undersampling Result](/img/undersampling_result.png)
+![Undersampling Result](/aix/img/undersampling_result.png)
 
 
 (대충 과적합을 방지하기 위해 under sampling을 한다는 내용)
