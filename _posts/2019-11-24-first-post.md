@@ -745,15 +745,17 @@ from torch.utils.data import DataLoader, TensorDataset
 import pandas as pd
 import numpy as np
 
+# tensorboardX를 사용하지 않으려면 아래 두 줄을 지워 주시면 됩니다.
 from tensorboardX import SummaryWriter
 writer = SummaryWriter()
 
+# batch size를 100으로 설정합니다.
 batch_size = 100
 
+# 신경망을 나타내는 Network 클래스입니다
 class Network(nn.Module):
     def __init__(self, input_size):
         super(Network, self).__init__()
-
         self.input_layer = nn.Linear(input_size, 256)
         self.hidden_layer_1 = nn.Linear(256, 128)
         self.hidden_layer_2 = nn.Linear(128, 128)
@@ -768,23 +770,24 @@ class Network(nn.Module):
         x = F.softmax(self.output_layer(x))
         return x
 
-target = ['CLASSIFICATION_Accident', 'CLASSIFICATION_Misdemeanor', 'CLASSIFICATION_Other', 'CLASSIFICATION_Service', 'CLASSIFICATION_Theft', 'CLASSIFICATION_Violence']
+# CLASSIFICATION은 
+labels = ['CLASSIFICATION_Accident', 'CLASSIFICATION_Misdemeanor', 'CLASSIFICATION_Other', 'CLASSIFICATION_Service', 'CLASSIFICATION_Theft', 'CLASSIFICATION_Violence']
 
 training_set_df = pd.read_csv('training_set_one_hot.csv', engine='python')
-training_set_target_df = training_set_df[target]
-training_set_df = training_set_df.drop(columns=target)
+training_set_target_df = training_set_df[labels]
+training_set_df = training_set_df.drop(columns=labels)
 training = TensorDataset(torch.from_numpy(np.array(training_set_df)), torch.from_numpy(np.array(training_set_target_df)))
 training_loader = DataLoader(training, batch_size=batch_size, shuffle=True)
 
 validation_set_df = pd.read_csv('validation_set_one_hot.csv', engine='python')
-validation_set_target_df = validation_set_df[target]
-validation_set_df = validation_set_df.drop(columns=target)
+validation_set_target_df = validation_set_df[labels]
+validation_set_df = validation_set_df.drop(columns=labels)
 validation = TensorDataset(torch.from_numpy(np.array(validation_set_df)), torch.from_numpy(np.array(validation_set_target_df)))
 validation_loader = DataLoader(validation, batch_size=batch_size, shuffle=True)
 
 test_set_df = pd.read_csv('test_set_one_hot.csv', engine='python')
-test_set_target_df = test_set_df[target]
-test_set_df = test_set_df.drop(columns=target)
+test_set_target_df = test_set_df[labels]
+test_set_df = test_set_df.drop(columns=labels)
 test = TensorDataset(torch.from_numpy(np.array(test_set_df)), torch.from_numpy(np.array(test_set_target_df)))
 test_loader = DataLoader(test, batch_size=batch_size, shuffle=False)
 
