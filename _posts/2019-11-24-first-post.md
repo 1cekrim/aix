@@ -647,7 +647,45 @@ test_set_df.to_csv('test_set.csv', index=False)
 
 ### one-hot encoding
 
+위 과정들을 통해 dataframe에는 아래와 같은 열들이 존재하게 되었습니다.
 
+| 열 이름 | 형식 |
+| DISTRICT | 문자열 |
+| YEAR | 정수 |
+| MONTH | 정수 |
+| DAY_OF_WEEK | 문자열 |
+| HOUR | 정수 |
+| CLASSIFICATION | 문자열 |
+| TIME | 문자열 |
+| WEEKDAY | 참/거짓 |
+| HUMAN_LOSS | 참/거짓|
+| FINANCIAL_LOSS | 참/거짓 |
+| INSIDE | 참/거짓 |
+| EXIST_VICTIM_OFFENDER | 참/거짓 |
+| ABOUT_AUTO | 참/거짓 |
+| EXIST_SINNER | 참/거짓 |
+
+이 데이터들을 신경망에 넣어주기 위해서는 하나의 벡터로 표현할 필요가 있습니다.  
+예를 들어, ```TIME``` 열은 다음과 같은 방법으로 하나의 벡터로 표현할 수 있습니다.  
+
+| 데이터 | TIME_Morning | TIME_Afternoon | TIME_Evening | TIME_Night |
+| Morning | 1 | 0 | 0 | 0 |
+| Afternoon | 0 | 1 | 0 | 0 |
+| Evening | 0 | 0 | 1 | 0 |
+| Night | 0 | 0 | 0 | 1 |
+
+python의 list 형식으로 표현하면 아래처럼 됩니다.  
+
+```python
+morning = [1, 0, 0, 0]
+afternoon = [0, 1, 0, 0]
+evening = [0, 0, 1, 0]
+night = [0, 0, 0, 1]
+```
+
+아렇게 각각의 열의 요소에 대해 0과 1로 벡터화를 해 주면, 데이터 하나를 하나의 벡터로 표현할 수 있게 됩니다.  
+이를 one-hot encoding이라고 합니다.  
+python의 pandas에서는 pd.get_dummies 메소드를 이용해 이 작업을 할 수 있습니다.  
 
 ```python
 import pandas as pd
@@ -656,10 +694,12 @@ test_set_df = pd.read_csv('test_set.csv', engine='python')
 training_set_df = pd.read_csv('training_set.csv', engine='python')
 validation_set_df = pd.read_csv('validation_set.csv', engine='python')
 
+# dataframe의 모든 columns에 대해 one-hot encoding을 수행합니다.
 test_set_df = pd.get_dummies(test_set_df, columns=test_set_df.columns)
 training_set_df = pd.get_dummies(training_set_df, columns=training_set_df.columns)
 validation_set_df = pd.get_dummies(validation_set_df, columns=validation_set_df.columns)
 
+# dataframe을 파일로 저장합니다.
 test_set_df.to_csv('test_set_one_hot.csv', index=False)
 training_set_df.to_csv('training_set_one_hot.csv', index=False)
 validation_set_df.to_csv('validation_set_one_hot.csv', index=False)
