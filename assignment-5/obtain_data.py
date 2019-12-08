@@ -96,29 +96,56 @@
 
 
 
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import numpy as np
+
+# df = pd.read_csv('fixed_crime4.csv', engine='python')
+
+# drop_list = ['Accident', 'Theft', 'Misdemeanor', 'Service', 'Violence']
+
+# new_df = df[df['CLASSIFICATION'] == 'Other']
+# other_count = len(df[df['CLASSIFICATION'] == 'Other'])
+
+# for class_name in drop_list:
+#     class_index = df[df['CLASSIFICATION'] == class_name].index
+#     under_sample_index = np.random.choice(class_index, other_count, replace=False)
+#     under_sample = df.loc[under_sample_index]
+#     new_df = new_df.append(under_sample)
+
+# new_df = new_df.sample(frac=1).reset_index(drop=True)
+
+# new_df.to_csv('fixed_crime5.csv', index=False)
+
+# new_df['CLASSIFICATION'].value_counts(sort=True, dropna=False).plot(kind='barh')
+# plt.show()
+
+
+
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 
-df = pd.read_csv('fixed_crime4.csv', engine='python')
+df = pd.read_csv('fixed_crime5.csv', engine='python')
 
-drop_list = ['Accident', 'Theft', 'Misdemeanor', 'Service', 'Violence']
+def func_time(x):
+    if 6 <= x and x < 12:
+        return 'Morning'
+    if 12 <= x and x < 17:
+        return 'Afternoon'
+    if 5 <= x and x < 19:
+        return 'Evening'
+    return 'Night'
 
-new_df = df[df['CLASSIFICATION'] == 'Other']
-other_count = len(df[df['CLASSIFICATION'] == 'Other'])
+df['TIME'] = df.apply(lambda x: func_time(x['HOUR']), axis=1)
 
-for class_name in drop_list:
-    class_index = df[df['CLASSIFICATION'] == class_name].index
-    under_sample_index = np.random.choice(class_index, other_count, replace=False)
-    under_sample = df.loc[under_sample_index]
-    new_df = new_df.append(under_sample)
+def func_weekday(x):
+    if x == 'Sunday' or x == 'Saturday':
+        return 1
+    else:
+        return 0
 
-new_df = new_df.sample(frac=1).reset_index(drop=True)
+df['WEEKDAY'] = df.apply(lambda x: func_weekday(x['DAY_OF_WEEK']), axis=1)
 
-new_df.to_csv('fixed_crime5.csv', index=False)
-
-new_df['CLASSIFICATION'].value_counts(sort=True, dropna=False).plot(kind='barh')
-plt.show()
+df.to_csv('fixed_crime6.csv', index=False)
 
 
 # 으악
