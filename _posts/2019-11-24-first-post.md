@@ -518,25 +518,30 @@ import pandas as pd
 
 df = pd.read_csv('fixed_crime5.csv', engine='python')
 
+# 시간이 [6, 12)이면 Morning, [12, 17)이면 Afternoon, [15, 19)이면 Evening, 나머지는 Night를 반환하는 함수입니다.
 def func_time(x):
     if 6 <= x and x < 12:
         return 'Morning'
     if 12 <= x and x < 17:
         return 'Afternoon'
-    if 5 <= x and x < 19:
+    if 15 <= x and x < 19:
         return 'Evening'
     return 'Night'
 
+# HOUR의 값을 func_time에 넣어, 범죄가 발생한 시간대를 TIME 열에 넣어줍니다.
 df['TIME'] = df.apply(lambda x: func_time(x['HOUR']), axis=1)
 
+# Sunday이거나 Saturday이면 weekday라는 의미로 1을 반환하는 함수입니다.
 def func_weekday(x):
     if x == 'Sunday' or x == 'Saturday':
         return 1
     else:
         return 0
 
+# weekday라면 WEEKDAY에 1을, 아니라면 0을 넣어줍니다.
 df['WEEKDAY'] = df.apply(lambda x: func_weekday(x['DAY_OF_WEEK']), axis=1)
 
+# 위에서 그린 표를 토대로, O 표시가 되어있는 OFFENSE_CODE_GROUP 요소명을 모아놓은 리스트들입니다.
 human_loss = ['Motor Vehicle Accident Response', 'Medical Assistance', 'Drug Violation', 'Simple Assault', 'Verbal Disputes', 'Aggravated Assault', 'Residential Burglary', 'Robbery', 'Harassment']
 financial_loss = ['Motor Vehicle Accident Response', 'Larceny', 'Vandalism', 'Larceny From Motor Vehicle', 'Property Lost', 'Fraud', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Confidence Games', 'Fire Related Reports', 'Counterfeiting', 'Commercial Burglary', 'Auto Theft Recovery']
 inside = ['Vandalism', 'Commercial Burglary']
@@ -544,21 +549,28 @@ exist_victim_offender = ['Larceny', 'Simple Assault', 'Verbal Disputes', 'Larcen
 about_auto = ['Motor Vehicle Accident Response', 'Towed', 'Larceny From Motor Vehicle', 'Auto Theft', 'Auto Theft Recovery']
 exist_sinner = ['Larceny', 'Drug Violation', 'Simple Assault', 'Vandalism', 'Verbal Disputes', 'Towed', 'Larceny From Motor Vehicle', 'Warrant Arrests', 'Aggravated Assault', 'Violations', 'Fraud', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Harassment', 'Confidence Games', 'Disorderly Conduct', 'Firearm Violations', 'License Violation', 'Restraining Order Violations', 'Counterfeiting', 'Commercial Burglary', 'Auto Theft Recovery', 'Liquor Violation']
 
+# x가 lst에 들어있으면 1을, 아니면 0을 반환하는 함수입니다.
 def func_in_list(x, lst):
     if x in lst:
         return 1
     else:
         return 0
 
+# func_in_list를 호출하면서 human_loss를 같이 넣어줍니다.
+# 이러면, OFFENSE_CODE_GROUP에 있는 요소들을 순회하면서 human_loss에 요소가 존재하면 1을, 아니면 0을 HUMAN_LOSS에 넣게 됩니다.
 df['HUMAN_LOSS'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], human_loss), axis=1)
+
+# 위와 동일한 원리의 코드입니다.
 df['FINANCIAL_LOSS'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], financial_loss), axis=1)
 df['INSIDE'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], inside), axis=1)
 df['EXIST_VICTIM_OFFENDER'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], exist_victim_offender), axis=1)
 df['ABOUT_AUTO'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], about_auto), axis=1)
 df['EXIST_SINNER'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], exist_sinner), axis=1)
 
+# 더는 필요없는 OFFENSE_CODE_GROUP을 df에서 지워줍니다.
 del df['OFFENSE_CODE_GROUP']
 
+# fixed_crime6.csv로 저장합니다.
 df.to_csv('fixed_crime6.csv', index=False)
 ```
 
@@ -814,7 +826,6 @@ class Network(nn.Module):
         x = F.softmax(self.output_layer(x))
         return x
 ```
-
 
 ### 2차 학습 결과
 
