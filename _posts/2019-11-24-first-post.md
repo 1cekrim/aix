@@ -408,7 +408,7 @@ plt.show()
 그래서 보통 머신 러닝 알고리즘들은 데이터셋에서 각 클래스의 개수가 동일할 때 좋은 성능을 보여줍니다.  
 
 이 문제를 해결하기 위해, Random undersampling이라는 기법을 사용할 것입니다.  
-Random undersampling은 간단합니다. 그냥 가장 적은 개수의 클래스(저희의 경우 Other)의 개수가 되도록 다른 클래스들의 데이터들을 무작위로 지워 주면 됩니다.  
+Random undersampling은 간단합니다. 그냥 가장 적은 개수의 클래스(저희의 경우 Other)의 개수가 되도록 다른 클래스들의 데이터들을 무작위로 샘플링 하면 됩니다.
 
 ```python
 import pandas as pd
@@ -417,26 +417,45 @@ import numpy as np
 
 df = pd.read_csv('fixed_crime4.csv', engine='python')
 
-drop_list = ['Accident', 'Theft', 'Misdemeanor', 'Service', 'Violence']
+# 샘플링 할 요소들입니다.
+sampling_list = ['Accident', 'Theft', 'Misdemeanor', 'Service', 'Violence']
 
+# CLASSIFICATION이 Other인 요소들만 꺼내 새로운 dataframe을 생성해 주고, 이 dataframe에 new_df라는 이름을 붙여줍니다.
+# Other의 개수 만큼 샘플링을 할 것이기 때문에, 이렇게 그냥 dataframe에 넣어줘도 됩니다.
 new_df = df[df['CLASSIFICATION'] == 'Other']
-other_count = len(df[df['CLASSIFICATION'] == 'Other'])
 
-for class_name in drop_list:
+# Other이 총 몇 개 있는지 셉니다.
+other_count = len(new_df))
+
+# 샘플링 할 요소들을 하나씩 돌아가면서 아래 코드를 실행시킵니다.
+for class_name in sampling_list:
+    # CLASSIFICATION이 지금 선택된 요소 (class_name)와 같은 요소들의 위치를 얻어내 class_index에 넣어줍니다.
     class_index = df[df['CLASSIFICATION'] == class_name].index
+
+    # class_index에서 무작위로 other_count 개를 샘플링합니다.
     under_sample_index = np.random.choice(class_index, other_count, replace=False)
+
+    # 원본 dataframe에서 샘플링한 행을 꺼내와 새로운 dataframe을 만듭니다.
     under_sample = df.loc[under_sample_index]
+
+    # 기존에 있던 new_df 아래에 새로 샘플링한 dataframe을 붙여줍니다.
     new_df = new_df.append(under_sample)
 
+# nex_df의 행을 무작위로 섞어 주는 코드입니다.
 new_df = new_df.sample(frac=1).reset_index(drop=True)
 
+# fixed_crime5.csv에 저장해 줍니다.
 new_df.to_csv('fixed_crime5.csv', index=False)
 
+# new_df dataframe의 CLASSIFICATION 비율을 확인하기 위해 그래프를 그려 봅시다.
 new_df['CLASSIFICATION'].value_counts(sort=True, dropna=False).plot(kind='barh')
 plt.show()
 ```
 
 ![Undersampling Result](/aix/img/undersampling_result.png)
+
+6개 분류의 데이터 개수가 약 27000개로 모두 동일하게 샘플링 된 것이 보입니다.  
+이제 데이터 불균형 걱정 없이 학습을 진행할 수 있겠습니다.  
 
 ### 데이터 추가 / 삭제
 
