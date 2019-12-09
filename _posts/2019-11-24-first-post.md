@@ -762,20 +762,11 @@ class Network(nn.Module):
         self.hidden_layer_3 = nn.Linear(128, 128)
         self.output_layer = nn.Linear(128, 6)
 
-        self.dropout1 = nn.Dropout(0.6)
-        self.dropout2 = nn.Dropout(0.6)
-        self.dropout3 = nn.Dropout(0.6)
-        self.dropout4 = nn.Dropout(0.6)
-
     def forward(self, x):
         x = F.relu(self.input_layer(x))
-        x = self.dropout1(x)
         x = F.relu(self.hidden_layer_1(x))
-        x = self.dropout2(x)
         x = F.relu(self.hidden_layer_2(x))
-        x = self.dropout3(x)
         x = F.relu(self.hidden_layer_3(x))
-        x = self.dropout4(x)
         x = F.softmax(self.output_layer(x))
         return x
 
@@ -855,26 +846,40 @@ for epoch in range(n_epochs):
         loss = criterion(output.float(), target.float())
         # valid_loss에 오차를 누적해 더합니다.
         valid_loss += loss.item() * data.size(0)
+        # valid를 몇 번 진행했는지 셉니다.
         valid_count += 1
 
-    train_loss = train_loss / train_count
-    valid_loss = valid_loss / valid_count
+    # loss를 count로 나눕니다.
+    train_loss /= train_count
+    valid_loss /= valid_count
 
+    # tensorboard에 loss를 기록합니다.
+    # tensorboard를 사용하지 않는다면 아래 코드는 지워주세요,
     writer.add_scalars('loss/train+valid', {'train': train_loss, 'valid': valid_loss}, epoch)
 
+    # 콘솔에 epoch와 loss를 출력합니다.
     print(f'Epoch: {epoch} \tTrain Loss: {train_loss} \tValid Loss: {valid_loss}')
 
+# model을 eval 모드로 변경합니다.
 model.eval()
-test_loss=0
-correct=0
+
+correct = 0
 for data,target in test_loader:
+    # model에 data 벡터를 넣고 계산한 다음 반환값을 output에 넣습니다.
     output = model(data.float())
+    # model이 정답을 맞춘 횟수만큼 correct를 증가시킵니다.
     for i in range(len(target)):
         if target[i][output[i].max(0)[1]] == 1:
             correct += 1
 
-print('\nAccuracy: {correct}/{len(test_loader.dataset)} ({100. * correct / len(test_loader.dataset)}%)\n')
+print(f'\nAccuracy: {correct}/{len(test_loader.dataset)} ({100. * correct / len(test_loader.dataset)}%)\n')
 ```
+
+### 학습 시작 전
+
+![Train Epoch 0](/aix/img/train_0.png)  
+
+학습을 하기 전에는 test set에 대한 정확도가 16.7% 정도로 나옵니다.  
 
 ### 1차 학습 결과
 
@@ -932,5 +937,6 @@ class Network(nn.Module):
 ---
 
 # V. Related Work
+
 [Crime Type Classification using Neural Networks: A brief walkthrough](https://medium.com/@nicksypark/crime-type-classification-using-neural-networks-a-brief-walkthrough-841b273f9afe)  
 [Analysis of Boston Crime Incident Open Data Using Pandas](https://towardsdatascience.com/analysis-of-boston-crime-incident-open-data-using-pandas-5ff2fd6e3254) 
