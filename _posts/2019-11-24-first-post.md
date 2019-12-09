@@ -276,32 +276,43 @@ Burglary - No Property Taken
 </details>
 
 범죄의 종류가 무려 67개나 됩니다.  
-일단은 발생한 횟수가 천번 이하인 범죄들을 모두 지워주는 게 좋을 것 같습니다.  
+일단은 발생한 횟수가 천번 이하인 범죄들을 모두 Other에 합쳐주는 것이 좋을 것 같습니다.  
 
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
 
 df = pd.read_csv('fixed_crime2.csv', engine='python')
+
+# OFFENSE_CODE_GROUP에 있는 각각의 요소의 개수를 세서 value_counts에 넣습니다.
 value_counts = df['OFFENSE_CODE_GROUP'].value_counts(sort=True, dropna=False).tolist()
+#각각의 요소들이 존재하는 index를 value_counts_index에 넣어줍니다.
 value_counts_index = df['OFFENSE_CODE_GROUP'].value_counts(sort=True, dropna=False).index.tolist()
 
+# Other에 합쳐질 요소들의 목록입니다.
 other_list = []
 
+# value_counts에 있는 것들을 하나씩 돌아가면서 개수가 1000개 이하면 other_list에, Other에 합쳐질 요소가 존재하는 index를 넣어줍니다.
 for i in range(len(value_counts)):
     if value_counts[i] <= 1000:
         other_list.append(value_counts_index[i])
 
+# 만약 x가 other_list 안에 존재한다면 Other을 반환하고, 아니라면 그냥 x를 반환합니다.
+# 예를 들어, x가 Drug라고 가정합시다.
+# x가 other_list 안에 있었다면 Other이 반환될 것이고, 아니였다면 Drug가 반환될 것입니다.
 def func(x):
     if x in other_list:
         return 'Other'
     else:
         return x
 
+# 아래 코드로, OFFENSE_CODE_GROUP column에 func 함수를 적용한 결과를 다시 OFFENSE_CODE_GROUP에 넣어줄 수 있습니다.
 df['OFFENSE_CODE_GROUP'] = df.apply(lambda x: func(x['OFFENSE_CODE_GROUP']), axis=1)
 
+# fixed_crime3.csv 파일로 저장해 줍니다.
 df.to_csv('fixed_crime3.csv', index=False)
 
+# 그래프를 그려 OFFENSE_CODE_GROUP가 어떻게 변했는지 확인해 봅시다.
 df['OFFENSE_CODE_GROUP'].value_counts(sort=True, dropna=False).plot(kind='barh')
 plt.show()
 ```
