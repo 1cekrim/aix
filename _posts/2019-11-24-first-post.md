@@ -367,6 +367,7 @@ plt.show()
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Accidnet, Theft, Misdemeanor, Service, Violence, Other로 분류할 OFFENSE_CODE_GROUP의 목록입니다.
 accident_list = ['Medical Assistance', 'Motor Vehicle Accident Response', 'Fire Related Reports', 'Police Service Incidents']
 theft_list = ['Larceny', 'Larceny From Motor Vehicle', 'Property Lost', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Fraud', 'Confidence Games', 'Commercial Burglary', 'Auto Theft Recovery']
 misdemeanor_list = ['Drug Violation', 'Liquor Violation', 'Vandalism', 'Towed', 'Violations', 'Disorderly Conduct', 'Firearm Violations', 'License Violation', 'Restraining Order Violations', 'Counterfeiting']
@@ -376,6 +377,8 @@ other_list = ['Other']
 
 df = pd.read_csv('fixed_crime3.csv', engine='python')
 
+# 아까 위에서 봤던 func와 비슷한 함수입니다.
+# x가 어디에 속하는지 검사해서 반환해줍니다.
 def func(x):
     if x in accident_list:
         return 'Accident'
@@ -390,10 +393,13 @@ def func(x):
     if x in other_list:
         return 'Other'
 
+# 아래 코드로, OFFENSE_CODE_GROUP column에 func 함수를 적용한 결과를 다시 OFFENSE_CODE_GROUP에 넣어줄 수 있습니다.
 df['CLASSIFICATION'] = df.apply(lambda x: func(x['OFFENSE_CODE_GROUP']), axis=1)
 
+# fixed_crime4.csv에 저장해줍니다.
 df.to_csv('fixed_crime4.csv', index=False)
 
+# CLASSIFICATION의 비율이 어떻게 되는지 확인하기 위해 그래프를 그려봅시다.
 df['CLASSIFICATION'].value_counts(sort=True, dropna=False).plot(kind='barh')
 plt.show()
 ```
