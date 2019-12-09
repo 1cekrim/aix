@@ -7,6 +7,8 @@ tags: [aix]
 comments: true
 ---
 
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 | <center>이름</center> | <center> 학과 </center> | <center>학번</center> | <center>이메일</center> | <center>역할</center> |
 | 김우찬 | 컴퓨터소프트웨어학부 | 2019031685 | lion0303@hanyang.ac.kr | 데이터셋 전처리 |
 | 김현수 | 컴퓨터소프트웨어학부 | 2019027192 | 1cekrim.dev@gmail.com | 코드 구현 |
@@ -714,6 +716,10 @@ validation_set_df.to_csv('validation_set_one_hot.csv', index=False)
 ### 활성함수 Relu
 
 ### 활성함수 Softmax
+
+$$
+Softmax(x_{i})=\frac{e^{x_{i}}}{\sum_{k=1}^{N}e^{x_{k}}}
+$$
 
 ### Dropout
 
