@@ -145,7 +145,47 @@ def func_weekday(x):
 
 df['WEEKDAY'] = df.apply(lambda x: func_weekday(x['DAY_OF_WEEK']), axis=1)
 
+human_loss = ['Motor Vehicle Accident Response', 'Medical Assistance', 'Drug Violation', 'Simple Assault', 'Verbal Disputes', 'Aggravated Assault', 'Residential Burglary', 'Robbery', 'Harassment']
+financial_loss = ['Motor Vehicle Accident Response', 'Larceny', 'Vandalism', 'Larceny From Motor Vehicle', 'Property Lost', 'Fraud', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Confidence Games', 'Fire Related Reports', 'Counterfeiting', 'Commercial Burglary', 'Auto Theft Recovery']
+inside = ['Vandalism', 'Commercial Burglary']
+exist_victim_offender = ['Larceny', 'Simple Assault', 'Verbal Disputes', 'Larceny From Motor Vehicle', 'Property Lost', 'Aggravated Assault', 'Fraud', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Harassment', 'Confidence Games', 'License Violation', 'Commercial Burglary', 'Auto Theft Recovery']
+about_auto = ['Motor Vehicle Accident Response', 'Towed', 'Larceny From Motor Vehicle', 'Auto Theft', 'Auto Theft Recovery']
+exist_sinner = ['Larceny', 'Drug Violation', 'Simple Assault', 'Vandalism', 'Verbal Disputes', 'Towed', 'Larceny From Motor Vehicle', 'Warrant Arrests', 'Aggravated Assault', 'Violations', 'Fraud', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Harassment', 'Confidence Games', 'Disorderly Conduct', 'Firearm Violations', 'License Violation', 'Restraining Order Violations', 'Counterfeiting', 'Commercial Burglary', 'Auto Theft Recovery', 'Liquor Violation']
+
+def func_in_list(x, lst):
+    if x in lst:
+        return 1
+    else:
+        return 0
+
+df['HUMAN_LOSS'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], human_loss), axis=1)
+df['FINANCIAL_LOSS'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], financial_loss), axis=1)
+df['INSIDE'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], inside), axis=1)
+df['EXIST_VICTIM_OFFENDER'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], exist_victim_offender), axis=1)
+df['ABOUT_AUTO'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], about_auto), axis=1)
+df['EXIST_SINNER'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], exist_sinner), axis=1)
+
+del df['OFFENSE_CODE_GROUP']
+
 df.to_csv('fixed_crime6.csv', index=False)
+
+
+
+
+import pandas as pd
+
+test_set_df = pd.read_csv('test_set.csv', engine='python')
+training_set_df = pd.read_csv('training_set.csv', engine='python')
+validation_set_df = pd.read_csv('validation_set.csv', engine='python')
+
+test_set_df = pd.get_dummies(test_set_df, columns=test_set_df.columns)
+training_set_df = pd.get_dummies(training_set_df, columns=training_set_df.columns)
+validation_set_df = pd.get_dummies(validation_set_df, columns=validation_set_df.columns)
+
+test_set_df.to_csv('test_set_one_hot.csv', index=False)
+training_set_df.to_csv('training_set_one_hot.csv', index=False)
+validation_set_df.to_csv('validation_set_one_hot.csv', index=False)
+
 
 
 # 으악
