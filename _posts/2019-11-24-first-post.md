@@ -930,9 +930,13 @@ class Network(nn.Module):
 
 ![Droupout](/aix/img/dropout.png)
 
+dropout을 적용하니, validation loss가 증가하는 현상은 해결이 되었습니다.
+
 ### 최종 결과
 
 ![Last Result](/aix/img/last_result.png)
+
+약 84% 정확도를 보입니다.
 
 ---
 
