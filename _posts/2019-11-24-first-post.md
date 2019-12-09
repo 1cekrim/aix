@@ -20,30 +20,59 @@ comments: true
 
 ## I. Introduction
 
-### Motivation: Why are you doing this?
+### 계기
 
-![Minority Report](https://ww.namu.la/s/06a79176babdc3957a67d9adbbc8614f934adea355ce3417d5596f9a236f50a6aa47b9aa4ad9d39ba60f03d8ed5a0dc419a86f9f915af409b6783259cc253aba33c4b3681cf5dc504a62c0f44f6af8131b7aa60c550d5afb0ad94f4addc633c0)<br>
-2002년 개봉한 영화 ‘마이너리티 리포트’는 2054년 워싱턴을 배경으로 합니다.<br>
-주 내용은 범죄가 일어나기 전 범죄를 예측해 범죄자를 단죄하는 최첨단 치안 시스템을 기반으로 하는데요? 이 시스템은 범죄가 일어날 시간과 장소, 범행을 저지를 사람들까지 예측할 수 있고, 특수경찰들이 미래의 범죄자들을 체포합니다.<br>
-우리는 여기서 아이디어를 얻어 2019년 판 ‘피리크라임’을 만들기로 했습니다. 빅데이터와 딥러닝을 통해서 말이죠.<br>
-우리는 2015년부터 2018년까지의 보스턴에서 발생한 범죄 데이터를 바탕으로. 언제 어디서 어떤 날씨에 어떤 범죄가 일어날지 예측하는 시스템을 만들고자 합니다.<br>
-저희의 목표는 2020년 보스턴에서의 첫 범죄를 예측하는 것입니다.
+![Minority Report](https://ww.namu.la/s/06a79176babdc3957a67d9adbbc8614f934adea355ce3417d5596f9a236f50a6aa47b9aa4ad9d39ba60f03d8ed5a0dc419a86f9f915af409b6783259cc253aba33c4b3681cf5dc504a62c0f44f6af8131b7aa60c550d5afb0ad94f4addc633c0)  
+2002년 개봉한 영화 ‘마이너리티 리포트’는 2054년 워싱턴을 배경으로 합니다.  
+주 내용은 범죄가 일어나기 전 범죄를 예측해 범죄자를 단죄하는 최첨단 치안 시스템을 기반으로 하는데요? 이 시스템은 범죄가 일어날 시간과 장소, 범행을 저지를 사람들까지 예측할 수 있고, 특수경찰들이 미래의 범죄자들을 체포합니다.  
+우리는 여기서 아이디어를 얻어 2019년 판 ‘피리크라임’을 만들기로 했습니다. 빅데이터와 딥러닝을 통해서 말이죠.  
+우리는 2015년부터 2018년까지의 보스턴에서 발생한 범죄 데이터를 바탕으로. 언제 어디서 어떤 범죄가 일어날지 예측하는 시스템을 만들고자 합니다.  
 
-### What do you want to see at the end?
+### 최종 목표
 
-4년간의 보스턴의 범죄 데이터를 바탕으로, 앞으로 일어날 범죄를 예측하고 이를 바탕으로 범죄 예방에 초점을 두고 있습니다.<br>
-범죄는 생각보다 불연속적 독립적 성격을 띠고 있지 않습니다. 오히려 연속적이면 비독립적이죠. 서로 연관이 되어 있습니다. 요일에 따라서 날씨에 따라서 범죄의 양뿐만 아니라 범죄의 종류까지 달라집니다.<br>
-예를 들자면, 금요일에는 대출사기가 많은 비율을 차지했습니다. 금요일과 대출사기의 상관관계를 찾는다면, 토요일과 일요일은 은행 영업을 안 한다는 이유 때문이겠죠.<br>
-궁극적으로는 범죄를 예측할 뿐 아니라 범죄와 여러 요건 간의 상관관계를 통해 확실한 범죄 예측 및 예방이 저희 팀 조의 최종 목표입니다. 
+4년간의 보스턴의 범죄 데이터를 바탕으로, 앞으로 일어날 범죄를 예측하고 이를 바탕으로 범죄 예방에 초점을 두고 있습니다.  
+범죄는 생각보다 불연속적 독립적 성격을 띠고 있지 않습니다. 오히려 연속적이면 비독립적이죠. 서로 연관이 되어 있습니다. 요일에 따라서 날씨에 따라서 범죄의 양뿐만 아니라 범죄의 종류까지 달라집니다.  
+저희는 인공신경망을 이용해 4년간의 보스턴의 범죄 데이터를 분석해, 간단한 정보를 넣어줬을 때 어떤 범죄가 발생할 지 예측하는 것을 최종 목표로 선택했습니다.
 
+### 사용할 도구
+
+저희가 사용할 언어는 python 3.6.8 입니다.  
+[Anaconda](https://www.anaconda.com/distribution/)라는 프로그램을 사용한다면 여러 파이썬 버전을 충돌 없이 사용할 수 있습니다.  
+
+파이썬 라이브러리로 pytorch, pandas, matplotlib, numpy, tensorboardX(선택) 을 사용할 예정입니다.
+
+```
+pip install torch pandas matplotlib numpy --user
+```
+
+학습 과정에서의 loss 변화, 정확도 변화 등을 보고 싶다면 tensorboard를 이용해야 합니다.  
+각 컴퓨터에 맞는 tensorboard를 설치하신 다음, tensorboardX 라이브러리를 받아 주시면 됩니다.  
+
+```
+pip install tensorboardX --user
+```
+
+아래 명령어로 설치된 파이썬 버전을 확인할 수 있습니다.  
+python 3.6.8가 출력된다면 정상적으로 파이썬이 설치된 것입니다.  
+
+```
+python --version
+```
+
+아래 명령어로 라이브러리들이 정상적으로 설치되었는지 확인할 수 있습니다.  
+아무것도 출력되지 않았다면 라이브러리들이 정상적으로 설치된 것입니다.
+
+```
+python -c 'import torch, pandas, matplotlib, numpy'
+```
 ---
 
 ## II. Datasets
 
 [캐글 주소](https://www.kaggle.com/AnalyzeBoston/crimes-in-boston)
 
-2015년부터 2018년까지 보스턴에서 발생한 범죄를 통계낸 자료입니다.<br>
-이 자료가 제공하는 csv 파일은 다음과 같습니다.<br>
+2015년부터 2018년까지 보스턴에서 발생한 범죄를 통계낸 자료입니다.  
+이 자료가 제공하는 csv 파일은 다음과 같습니다.  
 
 | <center>파일 이름</center> | <center>설명</center> |
 | crime.csv | 범죄가 일어난 시간, 요일, 범죄 코드 등이 나와있는 csv 파일 |
@@ -70,11 +99,47 @@ crime.csv의 각 열은 다음과 같은 의미입니다.
 | Long | 범죄가 발생한 위치의 경도입니다. |
 | Location | 범죄가 발생한 위치입니다. |
 
+### 맛보기
+
+이제 이 데이터를 이용해 간단한 그래프를 그려 보겠습니다.  
+csv 파일을 모두 다운받고, 파일이 있는 위치로 들어가서 test.py 파일을 만들어 주세요.  
+
+**test.py**
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# crime.csv에서 데이터를 읽어옵니다. 이 읽어온 데이터를 dataframe 이라고 합니다.
+# dataframe에 df라고 이름을 붙여줍니다.
+df = pd.read_csv('crime.csv', engine='python')
+
+# dataframe에서 YEAR의 내용을 기준으로 그룹화하고 (groupby)
+# 각 그룹의 갯수를 센 다음 (size)
+# 막대그래프로 그려줍니다 (plot)
+df.groupby('YEAR').size().plot(kind='barh')
+
+# plot 메소드는 내부적으로 matplotlib를 통해 그래프를 그려줍니다.
+# 그래서 plt.show()를 통해 그래프가 보이도록 합시다.
+plt.show()
+```
+
+'YEAR' 부분을 'MONTH', 'DAY_OF_WEEK' 등으로 바꿔서 다른 그래프를 그려볼 수 있습니다.  
+
 ![Groupby Year](/aix/img/groupby_year.jpg)
+
+년도를 기준으로 한 그래프입니다. 데이터 수집이 시작된 2015년과 데이터 수집이 끝난 2019년의 범죄수가 적은 것이 보입니다.  
+이 두 년도는 다른 년도에 비해 측정 기간이 짧았을 수 밖에 없으니 이건 큰 의미가 없을 것 같습니다.  
+
 ![Groupby Month](/aix/img/groupby_month.jpg)
+
+달을 기준으로 한 그래프입니다. 6월~7월이 범죄수가 더 많습니다.  
+덥고 습한 여름에 범죄가 많이 일어나는 건 어떻게 보면 당연할 수도 있습니다.  
+
 ![Groupby DayOfWeek](/aix/img/groupby_dayofweek.jpg)
 
-## 데이터 전처리 1
+요일을 기준으로 한 그래프입니다. 금요일의 범죄수가 가장 많고, 일요일의 범죄수가 가장 적습니다.  
+
+### 데이터 전처리 1
 
 데이터셋을 보면, 불필요한 열이 있습니다.  
 ```INCIDENT_NUMBER```은 그냥 순서대로 부여되는 의미없는 번호일 뿐이니 필요 없습니다.  
@@ -93,7 +158,7 @@ df = df.drop(columns=['INCIDENT_NUMBER', 'OFFENSE_CODE', 'OFFENSE_DESCRIPTION', 
 df.to_csv('fixed_crime.csv', index=False)
 ```
 
-필요 없는 열들을 모두 지우고 나면 아래 열만 남습니다.<br>
+필요 없는 열들을 모두 지우고 나면 아래 열만 남습니다.  
 
 | <center>열 이름</center> | <center>설명</center> |
 | OFFENSE_CODE_GROUP | 저지른 범죄가 어떤 종류에 속하는지 알려줍니다. |
@@ -129,7 +194,7 @@ plt.show()
 
 흠... 뭔가 많습니다. 이대로 바로 사용하는 것은 무리일 것 같습니다.  
 
-## 데이터 전처리 2
+### 데이터 전처리 2
 
 아래 코드를 이용해 OFFENSE_CODE_GROUP에 있는 요소들 목록을 정렬해서 출력할 수 있습니다.  
 
@@ -539,7 +604,18 @@ validation_set_df.to_csv('validation_set_one_hot.csv', index=False)
 
 ### 신경망 구조
 
-작성중입니다...
+![DNN](https://t1.daumcdn.net/cfile/tistory/212B724858BCE20914)
+
+저희가 사용할 신경망은 위 그림과 비슷하게 생긴 Deep Neural Network 입니다.
+
+| name | activation function | input | output |
+| input_layer | ReLu | 77 | 256 |
+| hidden_layer_1 | ReLu | 256 | 128 |
+| hidden_layer_2 | ReLu | 128 | 128 |
+| hidden_layer_3 | ReLu | 128 | 128 |
+| output_layer | Softmax | 128 | 6 |
+
+input_layer에 one-hot encoding 된 input을 넣어주면, output_layer에서 6개의 범죄 분류에 속할 확률을 출력해 주는 신경망입니다.
 
 ### 학습 코드
 
