@@ -1,6 +1,6 @@
 ---
 layout: post
-title: python을 이용한 보스턴 범죄 분석(작성중)
+title: python을 이용한 보스턴 범죄 분석
 gh-repo: 1cekrim/aix
 gh-badge: [star, fork, follow]
 tags: [aix]
