@@ -70,7 +70,9 @@ crime.csv의 각 열은 다음과 같은 의미입니다.
 | Long | 범죄가 발생한 위치의 경도입니다. |
 | Location | 범죄가 발생한 위치입니다. |
 
-(데이터셋을 이용해 그린 그래프들이 들어갈 위치)
+![Groupby Year](/aix/img/groupby_year.jpg)
+![Groupby Month](/aix/img/groupby_month.jpg)
+![Groupby DayOfWeek](/aix/img/groupby_dayofweek.jpg)
 
 ## 데이터 전처리 1
 
@@ -241,7 +243,7 @@ plt.show()
 
 ![Fixed Offense Code Group](/aix/img/fixed_offense_code_group.png)
 
-36개로 줄이는 데 성공했습니다! 이제 비슷한 범죄끼리 묶어 범죄의 종류를 5~10개 정도로 줄이는 것이 좋겠습니다.   
+36개로 줄이는 데 성공했습니다! 이제 비슷한 범죄끼리 묶어 범죄의 종류를 5~10개 정도로 줄이는 것이 좋겠습니다.  
 
 | OFFENSE_CODE_GROUP | 설명 | 분류 |
 | Motor Vehicle Accident Response | 교통사고 | 사고 |
@@ -360,10 +362,51 @@ plt.show()
 
 ![Undersampling Result](/aix/img/undersampling_result.png)
 
-### 데이터 추가
+### 데이터 추가 / 삭제
 
 이대로 바로 학습을 진행하는 것도 좋겠지만, 데이터를 조금 더 추가해줍시다.  
 범죄가 발생한 시간대가 Morning, Afternoon, Evening, Night 중 어디에 속하는지, 범죄가 발생한 날이 weekday인지 아닌지를 추가해주겠습니다.  
+또한, 인적 피해, 재산적 피해가 있었는지를 추가하고, 건물 내부에서 발생하는 범죄인지, 피해자와 가해자가 명확하게 존재하는 범죄인지, 차량에 관련된 것인지, 죄인이 존재하는지등을 추가로 더 넣어주겠습니다.  
+
+| OFFENSE_CODE_GROUP | 인적 피해 | 재산적 피해 | 건물 내부 | 피해자, 가해자 명확 | 차량 관련 | 죄인 존재 |
+| Motor Vehicle Accident Response | O | O | X | X | O | X |
+| Larceny | X | O | X | O | X | O |
+| Medical Assistance | O | X | X | X | X | X |
+| Investigate Person | X | X | X | X | X | X |
+| Other | X | X | X | X | X | X |
+| Drug Violation | O | X | X | X | X | O |
+| Simple Assault | O | X | X | O | X | O |
+| Vandalism | X | O | O | X | X | O |
+| Verbal Disputes | O | X | X | O | X | O |
+| Towed | X | X | X | X | O | O |
+| Investigate Property | X | X | X | X | X | X |
+| Larceny From Motor Vehicle | X | O | X | O | O | O |
+| Property Lost | X | O | X | O | X | X |
+| Warrant Arrests | X | X | X | X | X | O |
+| Aggravated Assault | O | X | X | O | X | O |
+| Violations | X | X | X | X | X | O |
+| Fraud | X | O | X | O | X | O |
+| Residential Burglary | O | O | X | O | X | O |
+| Missing Person Located | X | X | X | X | X | X |
+| Auto Theft | X | O | X | O | O | O |
+| Robbery | O | O | X | O | X | O |
+| Harassment | O | X | X | O | X | O |
+| Property Found | X | X | X | X | X | X |
+| Missing Person Reported | X | X | X | X | X | X |
+| Confidence Games | X | O | X | O | X | O |
+| Police Service Incidents | X | X | X | X | X | X |
+| Disorderly Conduct | X | X | X | X | X | O |
+| Fire Related Reports | X | O | X | X | X | X |
+| Firearm Violations | X | X | X | X | X | O |
+| License Violation | X | X | X | O | X | O |
+| Restraining Order Violations | X | X | X | O | X | O |
+| Counterfeiting | X | O | X | X | X | O |
+| Recovered Stolen Property | X | X | X | X | X | X |
+| Commercial Burglary | X | O | O | O | X | O |
+| Auto Theft Recovery | X | O | X | O | O | O |
+| Liquor Violation | X | X | X | X | X | O |
+
+데이터를 추가한 다음 더는 필요 없는 OFFENSE_CODE_GROUP를 지워줍시다.
 
 ```python
 import pandas as pd
@@ -388,6 +431,28 @@ def func_weekday(x):
         return 0
 
 df['WEEKDAY'] = df.apply(lambda x: func_weekday(x['DAY_OF_WEEK']), axis=1)
+
+human_loss = ['Motor Vehicle Accident Response', 'Medical Assistance', 'Drug Violation', 'Simple Assault', 'Verbal Disputes', 'Aggravated Assault', 'Residential Burglary', 'Robbery', 'Harassment']
+financial_loss = ['Motor Vehicle Accident Response', 'Larceny', 'Vandalism', 'Larceny From Motor Vehicle', 'Property Lost', 'Fraud', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Confidence Games', 'Fire Related Reports', 'Counterfeiting', 'Commercial Burglary', 'Auto Theft Recovery']
+inside = ['Vandalism', 'Commercial Burglary']
+exist_victim_offender = ['Larceny', 'Simple Assault', 'Verbal Disputes', 'Larceny From Motor Vehicle', 'Property Lost', 'Aggravated Assault', 'Fraud', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Harassment', 'Confidence Games', 'License Violation', 'Commercial Burglary', 'Auto Theft Recovery']
+about_auto = ['Motor Vehicle Accident Response', 'Towed', 'Larceny From Motor Vehicle', 'Auto Theft', 'Auto Theft Recovery']
+exist_sinner = ['Larceny', 'Drug Violation', 'Simple Assault', 'Vandalism', 'Verbal Disputes', 'Towed', 'Larceny From Motor Vehicle', 'Warrant Arrests', 'Aggravated Assault', 'Violations', 'Fraud', 'Residential Burglary', 'Auto Theft', 'Robbery', 'Harassment', 'Confidence Games', 'Disorderly Conduct', 'Firearm Violations', 'License Violation', 'Restraining Order Violations', 'Counterfeiting', 'Commercial Burglary', 'Auto Theft Recovery', 'Liquor Violation']
+
+def func_in_list(x, lst):
+    if x in lst:
+        return 1
+    else:
+        return 0
+
+df['HUMAN_LOSS'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], human_loss), axis=1)
+df['FINANCIAL_LOSS'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], financial_loss), axis=1)
+df['INSIDE'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], inside), axis=1)
+df['EXIST_VICTIM_OFFENDER'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], exist_victim_offender), axis=1)
+df['ABOUT_AUTO'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], about_auto), axis=1)
+df['EXIST_SINNER'] = df.apply(lambda x: func_in_list(x['OFFENSE_CODE_GROUP'], exist_sinner), axis=1)
+
+del df['OFFENSE_CODE_GROUP']
 
 df.to_csv('fixed_crime6.csv', index=False)
 ```
@@ -440,6 +505,25 @@ validation_set_df.to_csv('validation_set.csv', index=False)
 test_set_df.to_csv('test_set.csv', index=False)
 ```
 
+### one-hot encoding
+
+```python
+import pandas as pd
+
+test_set_df = pd.read_csv('test_set.csv', engine='python')
+training_set_df = pd.read_csv('training_set.csv', engine='python')
+validation_set_df = pd.read_csv('validation_set.csv', engine='python')
+
+test_set_df = pd.get_dummies(test_set_df, columns=test_set_df.columns)
+training_set_df = pd.get_dummies(
+    training_set_df, columns=training_set_df.columns)
+validation_set_df = pd.get_dummies(
+    validation_set_df, columns=validation_set_df.columns)
+
+test_set_df.to_csv('test_set_one_hot.csv', index=False)
+training_set_df.to_csv('training_set_one_hot.csv', index=False)
+validation_set_df.to_csv('validation_set_one_hot.csv', index=False)
+```
 
 ---
 
@@ -453,21 +537,176 @@ test_set_df.to_csv('test_set.csv', index=False)
 
 ## IV. Evaluation & Analysis
 
-1. 신경망 구조
+### 신경망 구조
 
-    작성중입니다...
+작성중입니다...
 
-2. 학습 코드
+### 학습 코드
 
-    작성중입니다...
+```python
+import torch
+from torch.autograd import Variable
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
 
-3. 학습 결과
+import pandas as pd
+import numpy as np
 
-    (대충 잘 안됐고 이를 해결하기 위해 다른 기법들을 사용해 본다는 내용)
+from tensorboardX import SummaryWriter
+writer = SummaryWriter()
 
-4. 최종 결과
+batch_size = 100
 
-    (잘 예측한다는 내용)
+class Network(nn.Module):
+    def __init__(self, input_size):
+        super(Network, self).__init__()
+
+        self.input_layer = nn.Linear(input_size, 256)
+        self.hidden_layer_1 = nn.Linear(256, 128)
+        self.hidden_layer_2 = nn.Linear(128, 128)
+        self.hidden_layer_3 = nn.Linear(128, 128)
+        self.output_layer = nn.Linear(128, 6)
+
+    def forward(self, x):
+        x = F.relu(self.input_layer(x))
+        x = F.relu(self.hidden_layer_1(x))
+        x = F.relu(self.hidden_layer_2(x))
+        x = F.relu(self.hidden_layer_3(x))
+        x = F.softmax(self.output_layer(x))
+        return x
+
+target = ['CLASSIFICATION_Accident', 'CLASSIFICATION_Misdemeanor', 'CLASSIFICATION_Other', 'CLASSIFICATION_Service', 'CLASSIFICATION_Theft', 'CLASSIFICATION_Violence']
+
+training_set_df = pd.read_csv('training_set_one_hot.csv', engine='python')
+training_set_target_df = training_set_df[target]
+training_set_df = training_set_df.drop(columns=target)
+training = TensorDataset(torch.from_numpy(np.array(training_set_df)), torch.from_numpy(np.array(training_set_target_df)))
+training_loader = DataLoader(training, batch_size=batch_size, shuffle=True)
+
+validation_set_df = pd.read_csv('validation_set_one_hot.csv', engine='python')
+validation_set_target_df = validation_set_df[target]
+validation_set_df = validation_set_df.drop(columns=target)
+validation = TensorDataset(torch.from_numpy(np.array(validation_set_df)), torch.from_numpy(np.array(validation_set_target_df)))
+validation_loader = DataLoader(validation, batch_size=batch_size, shuffle=True)
+
+test_set_df = pd.read_csv('test_set_one_hot.csv', engine='python')
+test_set_target_df = test_set_df[target]
+test_set_df = test_set_df.drop(columns=target)
+test = TensorDataset(torch.from_numpy(np.array(test_set_df)), torch.from_numpy(np.array(test_set_target_df)))
+test_loader = DataLoader(test, batch_size=batch_size, shuffle=False)
+
+print(len(training_set_df.columns))
+model = Network(len(training_set_df.columns))
+
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.0001)
+
+n_epochs = 100
+
+valid_loss_min = np.Inf
+
+for epoch in range(n_epochs):
+    train_loss = 0.0
+    valid_loss = 0.0
+
+    model.train()
+
+    train_count = 0
+    valid_count = 0
+
+    for data, target in training_loader:
+        optimizer.zero_grad()
+        output = model(data.float())
+        loss = criterion(output.float(), target.float())
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()*data.size(0)
+        train_count += 1
+
+    model.eval()
+    for data, target in validation_loader:
+        output = model(data.float())
+        loss = criterion(output.float(), target.float())
+        valid_loss += loss.item()*data.size(0)
+        valid_count += 1
+
+    train_loss = train_loss / train_count
+    valid_loss = valid_loss / valid_count
+
+    writer.add_scalars('loss/train+valid', {'train': train_loss, 'valid': valid_loss}, epoch)
+
+    print('Epoch: {} \tTraining Loss: {:.6f} \tValidation Loss: {:.6f}'.format(epoch, train_loss, valid_loss))
+
+
+model.eval()
+test_loss=0
+correct=0
+for data,target in test_loader:
+    output = model(data.float())
+    for i in range(len(target)):
+        if target[i][output[i].max(0)[1]] == 1:
+            correct += 1
+
+print('\nAccuracy: {}/{} ({:.0f}%)\n'.format(correct, len(test_loader.dataset), 100. * correct / len(test_loader.dataset)))
+
+```
+
+### 1차 학습 결과
+
+![Overfitting Graph](/aix/img/overfitting.png)
+
+빨간색이 training set의 loss 그래프, 파란색이 validation set의 loss 그래프입니다.  
+training set의 loss는 epoch가 지나며 계속 감소하지만, 오히려 validation set의 loss 그래프는 계속 증가하는 것이 보입니다.
+
+![Overfitting](https://pbs.twimg.com/media/CVz1XohXIAAW6PQ.jpg)
+
+그렇습니다. overfitting이 발생했습니다.  
+모델이 training set에 overfitting 되었기 때문에 validation set으로 테스트 했을 때의 오차가 줄어들지 않고 계속 증가하는 것입니다.  
+overfitting을 줄이기 위해 dropout이라는 기법을 이용하겠습니다.
+
+### Dropout 적용
+
+pytorch에서 dropout을 적용하는 것은 생각보다 간단합니다. Network 클래스를 만들 때, nn.Dropout 함수를 이용해서 dropout 레이어를 만들 수 있습니다.  
+
+```python
+class Network(nn.Module):
+    def __init__(self, input_size):
+        super(Network, self).__init__()
+
+        self.input_layer = nn.Linear(input_size, 256)
+        self.hidden_layer_1 = nn.Linear(256, 128)
+        self.hidden_layer_2 = nn.Linear(128, 128)
+        self.hidden_layer_3 = nn.Linear(128, 128)
+        self.output_layer = nn.Linear(128, 6)
+
+        self.dropout1 = nn.Dropout(0.6)
+        self.dropout2 = nn.Dropout(0.6)
+        self.dropout3 = nn.Dropout(0.6)
+        self.dropout4 = nn.Dropout(0.6)
+
+    def forward(self, x):
+        x = F.relu(self.input_layer(x))
+        x = self.dropout1(x)
+        x = F.relu(self.hidden_layer_1(x))
+        x = self.dropout2(x)
+        x = F.relu(self.hidden_layer_2(x))
+        x = self.dropout3(x)
+        x = F.relu(self.hidden_layer_3(x))
+        x = self.dropout4(x)
+        x = F.softmax(self.output_layer(x))
+        return x
+```
+
+
+### 2차 학습 결과
+
+![Droupout](/aix/img/dropout.png)
+
+### 최종 결과
+
+![Last Result](/aix/img/last_result.png)
 
 ---
 
