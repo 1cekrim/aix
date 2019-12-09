@@ -709,17 +709,49 @@ validation_set_df.to_csv('validation_set_one_hot.csv', index=False)
 
 ## III. Methodology
 
-### 인공신경망
+### Mean Squared Error (MSE)
+
+$$
+\frac{1}{N}\sum_{i=1}^{N}\left (  y_{i}-t_{i}\right )^{2}
+$$
+
+y는 신경망의 출력이고, t는 one-hot encoding된 label입니다.  
+신경망의 출력이 정답 label과 가까울 수록 Error 값은 적게 나옵니다.  
 
 ### 활성함수 Relu
 
+인공신경망의 hidden layer 활성함수로 유명한 것은 Sigmoid 함수입니다.
+
+$$
+Sigmoid(x)=\frac{1}{1+e^{-x}}
+$$
+
+![Sigmoid Graph](https://mlnotebook.github.io/img/transferFunctions/sigmoid.png)  
+[출처](https://reniew.github.io/12/)  
+
+Sigmoid 함수는 0 ~ 1의 값을 출력하기 때문에, 신경망이 깊어질수록 함수값이 점점 0에 가까워지고, Gradient가 0으로 수혐하는 Vanishing Gradient가 발생해 학습이 제대로 진행되지 않습니다.  
+그러므로 대안으로 Relu 함수를 사용합니다.
+
+$$
+Relu(x)=max(0,x)
+$$
+
+![Relu Graph](https://mlnotebook.github.io/img/transferFunctions/relu.png)
+[출처](https://reniew.github.io/12/)
+
+계산식이 단순해 Sigmoid보다 연산 비용이 적고, Gradient 값을 줄이지 않고 그대로 유지하기 때문에 학습 속도가 빠릅니다.  
+
 ### 활성함수 Softmax
+
+Softmax 함수는 N개의 출력을 모두 정규화 하여, 출력값의 총합을 1로 만드는 함수입니다.  
 
 $$
 Softmax(x_{i})=\frac{e^{x_{i}}}{\sum_{k=1}^{N}e^{x_{k}}}
 $$
 
-### Dropout
+총합이 1이 된다는 특징 덕분에, output layer의 활성함수로 Softmax를 사용하면 신경망의 출력 결과를 확률처럼 해석할 수 있게 됩니다.  
+예를 들어, 신경망의 출력에 Softmax를 적용한 결과가 [0.1, 0.4, 0.5]라면, input이 0에 속할 확률이 10%, 1에 속할 확률이 40%, 2에 속할 확률이 50%라고 해석할 수 있씁니다.  
+
 
 ---
 
