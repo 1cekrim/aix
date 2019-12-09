@@ -939,6 +939,7 @@ overfitting은 신경망의 weight가 지나치게 커지거나 작아지기 때
 이 현상을 줄이기 위해 유용하게 쓰이는 방법이 dropout 기법입니다.
 
 ![Dropout Image](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile23.uf.tistory.com%2Fimage%2F99DCCC3D5B87BF6D05D7D5)
+[출처](https://kevinthegrey.tistory.com/131)
 
 dropout은 간단합니다. 학습을 진행할 때 일시적으로 일부 퍼셉트론을 배제하고 신경망을 계산하는 것입니다.  
 이렇게 할 경우 overfitting을 어느 정도 줄일 수 있다고 알려져 있습니다.
