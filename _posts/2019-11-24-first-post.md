@@ -942,7 +942,7 @@ overfitting을 줄이기 위해 dropout이라는 기법을 이용하겠습니다
 overfitting은 신경망의 weight가 지나치게 커지거나 작아지기 때문에 발생합니다.  
 이 현상을 줄이기 위해 유용하게 쓰이는 방법이 dropout 기법입니다.
 
-![Dropout Image](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile23.uf.tistory.com%2Fimage%2F99DCCC3D5B87BF6D05D7D5)
+![Dropout Image](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile23.uf.tistory.com%2Fimage%2F99DCCC3D5B87BF6D05D7D5)  
 [출처](https://kevinthegrey.tistory.com/131)
 
 dropout은 간단합니다. 학습을 진행할 때 일시적으로 일부 퍼셉트론을 배제하고 신경망을 계산하는 것입니다.  
@@ -951,6 +951,24 @@ dropout은 간단합니다. 학습을 진행할 때 일시적으로 일부 퍼�
 pytorch에서 dropout을 적용하는 것은 생각보다 간단합니다. Network 클래스를 만들 때, nn.Dropout 함수를 이용해서 dropout 레이어를 만들 수 있습니다.  
 
 ```python
+import torch
+from torch.autograd import Variable
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
+
+import pandas as pd
+import numpy as np
+
+# tensorboardX를 사용하지 않으려면 아래 두 줄을 지워 주시면 됩니다.
+from tensorboardX import SummaryWriter
+writer = SummaryWriter()
+
+# batch size를 100으로 설정합니다.
+batch_size = 100
+
+# 신경망을 나타내는 Network 클래스입니다
 class Network(nn.Module):
     def __init__(self, input_size):
         super(Network, self).__init__()
@@ -960,12 +978,14 @@ class Network(nn.Module):
         self.hidden_layer_3 = nn.Linear(128, 128)
         self.output_layer = nn.Linear(128, 6)
 
+        # 60%를 dropout 하는 layer를 만들어줍니다.
         self.dropout1 = nn.Dropout(0.6)
         self.dropout2 = nn.Dropout(0.6)
         self.dropout3 = nn.Dropout(0.6)
         self.dropout4 = nn.Dropout(0.6)
 
     def forward(self, x):
+        # 각 layer 사이에 dropout layer를 끼워 넣어줍니다.
         x = F.relu(self.input_layer(x))
         x = self.dropout1(x)
         x = F.relu(self.hidden_layer_1(x))
@@ -976,6 +996,110 @@ class Network(nn.Module):
         x = self.dropout4(x)
         x = F.softmax(self.output_layer(x))
         return x
+
+# CLASSIFICATION은 label 이므로 labels에 잠깐 저장해놓겠습니다.
+labels = ['CLASSIFICATION_Accident', 'CLASSIFICATION_Misdemeanor', 'CLASSIFICATION_Other', 'CLASSIFICATION_Service', 'CLASSIFICATION_Theft', 'CLASSIFICATION_Violence']
+
+training_set_df = pd.read_csv('training_set_one_hot.csv', engine='python')
+# labels에 있는 이름의 열을 추출해 만든 dataframe을 training_set_labels_df에 넣어줍니다.
+training_set_labels_df = training_set_df[labels]
+# training_set_df에서 labels에 있는 이름의 열을 지워줍니다.
+training_set_df = training_set_df.drop(columns=labels)
+# 아래 코드로 pandas의 dataframe을 torch의 dataset으로 바꿔줄 수 있습니다.
+training = TensorDataset(torch.from_numpy(np.array(training_set_df)), torch.from_numpy(np.array(training_set_labels_df)))
+# 아래 코드로 배치의 크기가 batch_size와 같은 DataLoader를 생성할 수 있습니다.
+training_loader = DataLoader(training, batch_size=batch_size, shuffle=True)
+
+validation_set_df = pd.read_csv('validation_set_one_hot.csv', engine='python')
+validation_set_labels_df = validation_set_df[labels]
+validation_set_df = validation_set_df.drop(columns=labels)
+validation = TensorDataset(torch.from_numpy(np.array(validation_set_df)), torch.from_numpy(np.array(validation_set_labels_df)))
+validation_loader = DataLoader(validation, batch_size=batch_size, shuffle=True)
+
+test_set_df = pd.read_csv('test_set_one_hot.csv', engine='python')
+test_set_labels_df = test_set_df[labels]
+test_set_df = test_set_df.drop(columns=labels)
+test = TensorDataset(torch.from_numpy(np.array(test_set_df)), torch.from_numpy(np.array(test_set_labels_df)))
+test_loader = DataLoader(test, batch_size=batch_size, shuffle=False)
+
+# training_set_df의 column이 몇 개 남았는지 출력합니다
+print(len(training_set_df.columns))
+# 신경망의 Input은 training_set_df의 column의 수와 같아야 합니다.
+model = Network(len(training_set_df.columns))
+
+# 오차 함수로는 MSE를 사용합니다.
+criterion = nn.MSELoss()
+# optimizer로는 Adam을 사용하겠습니다. learning rate는 적당히 0.0001로 하겠습니다.
+optimizer = optim.Adam(model.parameters(), lr=0.0001)
+
+# training set을 100번 반복해서 학습합니다
+n_epochs = 100
+
+for epoch in range(n_epochs):
+    train_loss = 0.0
+    valid_loss = 0.0
+
+    # model을 train 모드로 변경합니다.
+    model.train()
+
+    train_count = 0
+    valid_count = 0
+
+    for data, target in training_loader:
+        # training_set에서 batch_size 만큼의 data과 target(label)을 Tensor로 꺼냅니다.
+        # 학습을 시작하기 전에 gradient를 0으로 초기화합니다.
+        optimizer.zero_grad()
+        # model에 data 벡터를 넣고 계산한 다음 반환값을 output에 넣습니다.
+        output = model(data.float())
+        # MSE를 이용해 output과 target 사이의 오차를 계산합니다.
+        loss = criterion(output.float(), target.float())
+        # 오차 역전파를 수행합니다.
+        loss.backward()
+        # Adam으로 model의 paramater들을 최적화합니다.
+        optimizer.step()
+        # train_loss에 오차를 누적해 더합니다.
+        train_loss += loss.item() * data.size(0)
+        # train을 몇 번 진행했는지 셉니다.
+        train_count += 1
+
+    # model을 eval 모드로 변경합니다.
+    # eval 모드에서는 dropout이나 오차 역전파 등이 일어나지 않습니다.
+    model.eval()
+    for data, target in validation_loader:
+        # validation_set에서 batch_size 만큼의 data과 target(label)을 Tensor로 꺼냅니다.
+        # model에 data 벡터를 넣고 계산한 다음 반환값을 output에 넣습니다.
+        output = model(data.float())
+        # MSE를 이용해 output과 target 사이의 오차를 계산합니다.
+        loss = criterion(output.float(), target.float())
+        # valid_loss에 오차를 누적해 더합니다.
+        valid_loss += loss.item() * data.size(0)
+        # valid를 몇 번 진행했는지 셉니다.
+        valid_count += 1
+
+    # loss를 count로 나눕니다.
+    train_loss /= train_count
+    valid_loss /= valid_count
+
+    # tensorboard에 loss를 기록합니다.
+    # tensorboard를 사용하지 않는다면 아래 코드는 지워주세요,
+    writer.add_scalars('loss/train+valid', {'train': train_loss, 'valid': valid_loss}, epoch)
+
+    # 콘솔에 epoch와 loss를 출력합니다.
+    print(f'Epoch: {epoch} \tTrain Loss: {train_loss} \tValid Loss: {valid_loss}')
+
+# model을 eval 모드로 변경합니다.
+model.eval()
+
+correct = 0
+for data,target in test_loader:
+    # model에 data 벡터를 넣고 계산한 다음 반환값을 output에 넣습니다.
+    output = model(data.float())
+    # model이 정답을 맞춘 횟수만큼 correct를 증가시킵니다.
+    for i in range(len(target)):
+        if target[i][output[i].max(0)[1]] == 1:
+            correct += 1
+
+print(f'\nAccuracy: {correct}/{len(test_loader.dataset)} ({100. * correct / len(test_loader.dataset)}%)\n')
 ```
 
 ### 2차 학습 결과
