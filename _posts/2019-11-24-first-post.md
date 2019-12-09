@@ -7,12 +7,12 @@ tags: [aix]
 comments: true
 ---
 
-| <center>이름</center> | <center> 학과 </center> | <center>학번</center> | <center>이메일</center> |
-| 김우찬 | 컴퓨터소프트웨어학부 | 2019031685 | lion0303@hanyang.ac.kr |
-| 김현수 | 컴퓨터소프트웨어학부 | 2019027192 | 1cekrim.dev@gmail.com |
-| 이경민 | 기계공학부           | 2019015196 | kminsmin@gmail.com |
-| 조영환 | 원자력공학과         | 2014058386 | jyh4997@naver.com |
-| 최민기 | 자연환경공학과       | 2017080746 | tjsrhr136@naver.com |
+| <center>이름</center> | <center> 학과 </center> | <center>학번</center> | <center>이메일</center> | <center>역할</center> |
+| 김우찬 | 컴퓨터소프트웨어학부 | 2019031685 | lion0303@hanyang.ac.kr | 데이터세 전처리 |
+| 김현수 | 컴퓨터소프트웨어학부 | 2019027192 | 1cekrim.dev@gmail.com | 코드 구현 |
+| 이경민 | 기계공학부           | 2019015196 | kminsmin@gmail.com | 그래프 분석 |
+| 조영환 | 원자력공학과         | 2014058386 | jyh4997@naver.com | 영상 |
+| 최민기 | 자연환경공학과       | 2017080746 | tjsrhr136@naver.com | 녹음 |
 
 ![crimes-in-boston-image](https://storage.googleapis.com/kaggle-datasets-images/49781/90388/0e523321547c24d989c910879491fce7/dataset-cover.JPG?t=2018-09-04-17-52-47)
 
@@ -22,7 +22,7 @@ comments: true
 
 ### 계기
 
-![Minority Report](https://ww.namu.la/s/06a79176babdc3957a67d9adbbc8614f934adea355ce3417d5596f9a236f50a6aa47b9aa4ad9d39ba60f03d8ed5a0dc419a86f9f915af409b6783259cc253aba33c4b3681cf5dc504a62c0f44f6af8131b7aa60c550d5afb0ad94f4addc633c0)  
+![Minority Report](https://m.media-amazon.com/images/M/MV5BZTI3YzZjZjEtMDdjOC00OWVjLTk0YmYtYzI2MGMwZjFiMzBlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg)  
 2002년 개봉한 영화 ‘마이너리티 리포트’는 2054년 워싱턴을 배경으로 합니다.  
 주 내용은 범죄가 일어나기 전 범죄를 예측해 범죄자를 단죄하는 최첨단 치안 시스템을 기반으로 하는데요? 이 시스템은 범죄가 일어날 시간과 장소, 범행을 저지를 사람들까지 예측할 수 있고, 특수경찰들이 미래의 범죄자들을 체포합니다.  
 우리는 여기서 아이디어를 얻어 2019년 판 ‘피리크라임’을 만들기로 했습니다. 빅데이터와 딥러닝을 통해서 말이죠.  
