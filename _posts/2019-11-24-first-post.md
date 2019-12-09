@@ -906,3 +906,6 @@ class Network(nn.Module):
 # V. Related Work
 [Crime Type Classification using Neural Networks: A brief walkthrough](https://medium.com/@nicksypark/crime-type-classification-using-neural-networks-a-brief-walkthrough-841b273f9afe)  
 [Analysis of Boston Crime Incident Open Data Using Pandas](https://towardsdatascience.com/analysis-of-boston-crime-incident-open-data-using-pandas-5ff2fd6e3254) 
+
+# VI. Youtube
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style><div class='embed-container'><iframe src='https://www.youtube.com/embed//gqpXQ74nH4g' frameborder='0' allowfullscreen></iframe></div>
