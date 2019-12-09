@@ -8,11 +8,11 @@ comments: true
 ---
 
 | <center>이름</center> | <center> 학과 </center> | <center>학번</center> | <center>이메일</center> | <center>역할</center> |
-| 김우찬 | 컴퓨터소프트웨어학부 | 2019031685 | lion0303@hanyang.ac.kr | 데이터세 전처리 |
+| 김우찬 | 컴퓨터소프트웨어학부 | 2019031685 | lion0303@hanyang.ac.kr | 데이터셋 전처리 |
 | 김현수 | 컴퓨터소프트웨어학부 | 2019027192 | 1cekrim.dev@gmail.com | 코드 구현 |
 | 이경민 | 기계공학부           | 2019015196 | kminsmin@gmail.com | 그래프 분석 |
-| 조영환 | 원자력공학과         | 2014058386 | jyh4997@naver.com | 영상 |
-| 최민기 | 자연환경공학과       | 2017080746 | tjsrhr136@naver.com | 녹음 |
+| 조영환 | 원자력공학과         | 2014058386 | jyh4997@naver.com | 영상, 자료조사 |
+| 최민기 | 자연환경공학과       | 2017080746 | tjsrhr136@naver.com | 녹음, 데이터셋 선정 |
 
 ![crimes-in-boston-image](https://storage.googleapis.com/kaggle-datasets-images/49781/90388/0e523321547c24d989c910879491fce7/dataset-cover.JPG?t=2018-09-04-17-52-47)
 
@@ -709,9 +709,13 @@ validation_set_df.to_csv('validation_set_one_hot.csv', index=False)
 
 ## III. Methodology
 
-- ANN
+### 인공신경망
 
-(인공신경망에 대한 설명)
+### 활성함수 Relu
+
+### 활성함수 Softmax
+
+### Dropout
 
 ---
 
