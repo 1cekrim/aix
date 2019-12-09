@@ -174,6 +174,10 @@ df.to_csv('fixed_crime.csv', index=False)
 import pandas as pd
 
 df = pd.read_csv('fixed_crime.csv', engine='python')
+
+# pandas에서 누락된 값은 'nan' 이라고 표현됩니다.
+# dropna는 이런 nan이 있는 행 또는 열을 모두 지워주는 메소드입니다.
+# axis=0 이라고 넣어주면 nan이 있는 행을 모두 지워줍니다.
 df = df.dropna(axis=0)
 df.to_csv('fixed_crime2.csv', index=False)
 ```
