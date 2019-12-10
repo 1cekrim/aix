@@ -1,13 +1,18 @@
+import tkinter
+import matplotlib
+matplotlib.use('TkAgg')
 import pandas as pd
+import matplotlib.pyplot as plt
 
-test_set_df = pd.read_csv('test_set.csv', engine='python')
-training_set_df = pd.read_csv('training_set.csv', engine='python')
-validation_set_df = pd.read_csv('validation_set.csv', engine='python')
+# crime.csv에서 데이터를 읽어옵니다. 이 읽어온 데이터를 dataframe 이라고 합니다.
+# dataframe에 df라고 이름을 붙여줍니다.
+df = pd.read_csv('crime.csv', engine='python')
 
-test_set_df = pd.get_dummies(test_set_df, columns=test_set_df.columns)
-training_set_df = pd.get_dummies(training_set_df, columns=training_set_df.columns)
-validation_set_df = pd.get_dummies(validation_set_df, columns=validation_set_df.columns)
+# dataframe에서 YEAR의 내용을 기준으로 그룹화하고 (groupby)
+# 각 그룹의 갯수를 센 다음 (size)
+# 막대그래프로 그려줍니다 (plot)
+df.groupby('YEAR').size().plot(kind='barh')
 
-test_set_df.to_csv('test_set_one_hot.csv', index=False)
-training_set_df.to_csv('training_set_one_hot.csv', index=False)
-validation_set_df.to_csv('validation_set_one_hot.csv', index=False)
+# plot 메소드는 내부적으로 matplotlib를 통해 그래프를 그려줍니다.
+# 그래서 plt.show()를 통해 그래프가 보이도록 합시다.
+plt.show()
